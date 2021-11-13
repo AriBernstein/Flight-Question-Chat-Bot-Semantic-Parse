@@ -19,7 +19,8 @@ TERMS_FIELD = "terms"
 
 def call_trips_parser_api(sentence:str) -> dict:
     resp = requests.get(
-        GET_URL + "?input=" + re.sub(r'\s+', '+', sentence) + "?output-parts=word-lisp lf-lisp")
+        GET_URL + "?input=" + re.sub(r'\s+', '+', sentence) + \
+            "?output-parts=word-lisp lf-lisp")
     if resp.status_code != 200:
         raise Exception(
             f"Bad response when calling call_trips_parser_api\nCode: \
@@ -46,25 +47,28 @@ def call_trips_parser_api(sentence:str) -> dict:
 
     return ret
 
-def print_dicts(a:dict, indent=0) -> None:
+def print_dicts(a:dict, indent=0, skip_fields=None) -> None:
     for k in a.keys():
-        if not (isinstance(a[k], dict) or isinstance(a[k], OrderedDict)):
-            
+        if skip_fields and k in skip_fields:
+            continue
+        if isinstance(a[k], dict) or isinstance(a[k], OrderedDict):
+            print_dicts(a[k], indent + 1)
+        else:
+            print(f"{' ' * indent}KEY: {k} ->\t {a[k]}")
     
 if __name__ == "__main__":
     sentence = "I want to fly."
     x = call_trips_parser_api(sentence)
-    for i in x.keys():
-        if not i == PARSES_FIELD:
-            print(f"KEY: {i}\n\t -> {x[i]}")
+    print("1")
+    print(x)
+    print_dicts(x, skip_fields=set([PARSES_FIELD]))
     
+    print("2")
     for i, v in enumerate(x[PARSES_FIELD]):
         print(f"Interpretation {i}:\n\t")
         print(f"\tParse Tree:\n\t{v[0]}")
-        for j in v[0].keys():
-            print(f"KEY: {j}\n\t -> {v[0][j]}")
+        print_dicts(v[0])
         
         print(f"\tLogical Form:{v[1]}")
-        for j in v[1].keys():
-            print(f"KEY: {j}\n\t -> {v[1][j]}")
+        print_dicts(v[1])
         
