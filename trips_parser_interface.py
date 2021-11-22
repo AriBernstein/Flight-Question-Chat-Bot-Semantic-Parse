@@ -1,14 +1,14 @@
-from typing import OrderedDict
+from typing import Iterable
+from collections import OrderedDict
 import xmltodict
 import requests
 import re
 """
 
 Call the TRIPS Parser API to retrieve semantic interpretations of input.
-API Documentation can be found here:
-http://trips.ihmc.us/parser/api.html
-
+API Documentation can be found here: http://trips.ihmc.us/parser/api.html
 """
+SENTENCE = "I want to fly."
 
 GET_URL = "http://trips.ihmc.us/parser/cgi/parse"
 MULTIPLE_PARSES_FIELD = "compound-communication-act"
@@ -17,7 +17,14 @@ PARSES_FIELD = "parses"
 TREE_FIELD = "tree"
 TERMS_FIELD = "terms"
 
+INDENT_LEN = 5
+
+ITERABLE_CHECKS = {list, set, tuple}
+DICT_CHECKS = {dict, OrderedDict}
+SKIP_FIELDS = {"rdf:RDF"}
+
 def call_trips_parser_api(sentence:str) -> dict:
+    
     resp = requests.get(
         GET_URL + "?input=" + re.sub(r'\s+', '+', sentence) + \
             "?output-parts=word-lisp lf-lisp")
@@ -47,28 +54,52 @@ def call_trips_parser_api(sentence:str) -> dict:
 
     return ret
 
-def print_dicts(a:dict, indent=0, skip_fields=None) -> None:
+def dict_str(a:dict, indent:int=0, ret="", skip_fields:set[str]=None) -> str:
     for k in a.keys():
         if skip_fields and k in skip_fields:
             continue
-        if isinstance(a[k], dict) or isinstance(a[k], OrderedDict):
-            print_dicts(a[k], indent + 1)
+        elif type(a[k]) in ITERABLE_CHECKS:
+            ret += list_str(l=a[k], indent=indent + INDENT_LEN, ret=ret)
+        # elif type(a[k]) in DICT_CHECKS:
+        #     ret += dict_str(a=a[k], indent=indent + INDENT_LEN, ret=ret)
         else:
-            print(f"{' ' * indent}KEY: {k} ->\t {a[k]}")
+            ret += f"{ret}\n{' ' * indent}KEY: {k} -> {a[k]}"
+    return ret
+
+def list_str(l:Iterable, indent:int=0, ret:str="", line_char_len:int=50) -> str:
+    if not l:
+        return "[empty list]"
+    
+    list_str = f"{indent}["
+    for e in l:        
+        appended_to_ret = False
+        if type(e) in ITERABLE_CHECKS:
+            list_str += list_str(e, indent + INDENT_LEN, ret, line_char_len)
+        elif type(e) in DICT_CHECKS:
+            list_str += dict_str(e, indent + INDENT_LEN, ret)
+        else:
+            list_str += f"{e}, "
+            
+        if len(list_str) >= line_char_len:
+            appended_to_ret = True
+            ret += f"\n{list_str}"
+            list_str = f" {indent}"
+
+    if not appended_to_ret:
+        ret += f"\n{list_str}"
+    
+    return f"{ret[:-2]}]"
     
 if __name__ == "__main__":
-    sentence = "I want to fly."
-    x = call_trips_parser_api(sentence)
-    print("1")
-    print(x)
-    print_dicts(x, skip_fields=set([PARSES_FIELD]))
+    parser_data = call_trips_parser_api(SENTENCE)
     
-    print("2")
-    for i, v in enumerate(x[PARSES_FIELD]):
-        print(f"Interpretation {i}:\n\t")
-        print(f"\tParse Tree:\n\t{v[0]}")
-        print_dicts(v[0])
+    print("1")
+    print(
+        dict_str(parser_data, skip_fields={PARSES_FIELD}))
         
-        print(f"\tLogical Form:{v[1]}")
-        print_dicts(v[1])
-        
+    print("\n----------\n\n2")
+    for i, v in enumerate(parser_data[PARSES_FIELD]):
+        print(f"\n-> 2.{i} ----------\n")
+        print(f"Interpretation {i}:")
+        print(f"\n\tParse Tree:\n\t{dict_str(v[0])}")
+        print(f"\n\tLogical Form:\n\t{dict_str(a=v[1], skip_fields=SKIP_FIELDS)}\n\n")
