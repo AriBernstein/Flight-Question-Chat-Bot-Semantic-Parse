@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 from typing import Iterable
 from collections import OrderedDict
 import xmltodict
@@ -87,7 +90,7 @@ def list_str(it:Iterable, indent:int=0, ret:str="", line_char_lim:int=50, skip_f
         ret += f"\n {list_line}"
 
     return ret
-    
+
 if __name__ == "__main__":
     parser_data = call_trips_parser_api(SENTENCE)
     
