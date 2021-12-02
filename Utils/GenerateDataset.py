@@ -17,8 +17,8 @@ def get_airport_df() -> p.DataFrame:
             birmingham,      None, alabama,         al, bhm, birmingha...,      1516075
     """
     
-    ap_df = p.read_csv(_AIRPORTS_FP, 
-                       usecols=["City", "FAA", "Airport", "Enplanements\n"])
+    ap_df = p.read_csv(_AIRPORTS_FP, usecols=[
+        "City", "FAA", "Airport", "Enplanements\n"])
     
     # Eliminate whitespace & newlines
     cols = list(ap_df.columns)    # type: list[str]
@@ -72,4 +72,4 @@ def get_airport_df() -> p.DataFrame:
         
 # def generate_flight_set() -> list[]
 if __name__ == "__main__":
-    get_airport_df()
+    print(get_airport_df())

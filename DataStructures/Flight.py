@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from Locations import Airport, City, State
+from Locations import Airport
 
 class Flight:
     

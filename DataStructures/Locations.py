@@ -1,5 +1,3 @@
-import pandas as p
-
 class Country:
     def __init__(self, country_name:str = "united states of america",
                  country_abbr:str="usa") -> None:
