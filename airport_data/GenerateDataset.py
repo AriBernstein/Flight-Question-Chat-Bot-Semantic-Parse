@@ -67,8 +67,9 @@ def get_airport_df() -> p.DataFrame:
         airports_in_state["state_abbr"] = state_abbr
         airports_in_state["city_abbr"] = airports_in_state["city"].apply(city_abbr)
         cleaned_ap_df = cleaned_ap_df.append(airports_in_state)
-    print(cleaned_ap_df)
+    
+    return cleaned_ap_df
         
-                            
+# def generate_flight_set() -> list[]
 if __name__ == "__main__":
     get_airport_df()
