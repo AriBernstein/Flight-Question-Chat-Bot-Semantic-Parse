@@ -6,7 +6,7 @@ from DataStructures.Flight import Flight
 from DataStructures.Locations import Airport, City, State
 
 # File locations
-_DIR = "DataSet/"
+_DIR = "DataSet/Locations/"
 _AIRPORTS_FP = _DIR + "airport_data.csv"
 _STATE_ABBR_FP = _DIR + "us_state_abbr.csv"
 
