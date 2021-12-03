@@ -1,4 +1,4 @@
-from DataStructures.OntologyNode import OntologyNode
+from DataStructures.OntologyStructures.OntologyNode import OntologyNode
 
 class OntologyTree:
     

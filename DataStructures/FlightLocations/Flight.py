@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from DataStructures.Locations import Airport
+from DataStructures.FlightLocations.Locations import Airport
 
 class Flight:
     

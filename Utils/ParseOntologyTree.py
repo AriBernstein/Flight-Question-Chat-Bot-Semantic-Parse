@@ -1,8 +1,8 @@
 from typing import Union
 from bs4 import BeautifulSoup
 
-from DataStructures.OntologyNode import OntologyNode
-from DataStructures.OntologyTree import OntologyTree
+from DataStructures.OntologyStructures.OntologyNode import OntologyNode
+from DataStructures.OntologyStructures.OntologyTree import OntologyTree
 
 _ONTOLOGY_HTML_FP = "DataSet/Ontology/trips_ontology_tree.html"
 _ONTOLOGY_STRUCTURE_URL = "https://www.cs.rochester.edu/research/trips/lexicon/cgi/browseontology-ajax"
