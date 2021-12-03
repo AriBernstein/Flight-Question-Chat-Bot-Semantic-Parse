@@ -1,11 +1,14 @@
 class Country:
-    def __init__(self, country_name:str = "united states of america",
-                 country_abbr:str="usa") -> None:
-        self.country_name=country_name
-        self.country_abbr=country_abbr
+    def __init__(self) -> None:
+        self.country_name="united states of america"
+        self.country_abbr="usa"
+        self._location_priority = 1
         
     def abbr(self) -> str:
         return self.country_abbr
+        
+    def priority(self) -> int:
+        return self._location_priority
         
     def __str__(self) -> str:
         return self.country_name.title()
@@ -25,6 +28,7 @@ class State(Country):
         super().__init__()
         self.state_name = state_name
         self.state_abbr = state_abbr
+        self._location_priority = 2
         
     def abbr(self) -> str:
         return self.state_abbr.upper()
@@ -51,6 +55,7 @@ class City(State):
         super().__init__(state_name, state_abbr)
         self.city_name = city_name
         self.city_abbr = city_abbr
+        self._location_priority = 3
         
     def abbr(self):
         return self.city_abbr.upper() if self.city_abbr else str(self)
@@ -83,6 +88,7 @@ class Airport(City):
         self.airport_name = airport_name
         self.airport_abbr = airport_abbr
         self.enplanements = enplanements
+        self._location_priority = 4
         
     def abbr(self) -> str:
         return self.airport_abbr.upper()
