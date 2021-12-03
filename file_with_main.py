@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from Utils.GenerateLocations import get_airports_dataframe, generate_location_objects
-from Utils.ParseOntologyTree import get_ontology_etree
+from Utils.ParseOntologyTree import build_ontology_tree
 
 
 if __name__ == "__main__":
@@ -9,5 +9,5 @@ if __name__ == "__main__":
     # states_dict, cities_dict, airports_dict, states_to_cities, \
     #     states_to_airports, cities_to_airports, state_abbr_to_state, \
     #         city_abbr_to_city = generate_location_objects(x)
-    x = get_ontology_etree()
-    pprint(x)
+    x = build_ontology_tree()
+    print(x.get_children()[0])
