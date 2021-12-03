@@ -122,7 +122,7 @@ def get_airports_dataframe() -> p.DataFrame:
     return cleaned_ap_df
 
         
-def generate_location_objects(airports_df:p.DataFrame) -> tuple[
+def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
         dict[str, State], dict[str, City], dict[str, Airport], 
         dict[str, set[City]], dict[str, set[Airport]], dict[str, set[Airport]]]:
     """
@@ -130,7 +130,8 @@ def generate_location_objects(airports_df:p.DataFrame) -> tuple[
     parser.
 
     Args:
-        airports_df (p.DataFrame): Output of read_and_clean_csv_data
+        airports_df (p.DataFrame): DataFrame to read into data structure. If
+            None, call get_airports_dataframe().
 
     Returns:
         tuple[ dict[str, str], dict[str, str], dict[str, State],  
@@ -144,7 +145,11 @@ def generate_location_objects(airports_df:p.DataFrame) -> tuple[
             5. states to airports - key -> state abbr lowercase, pair -> set of lowercase FAA codes
             6. cities to airports - key -> city full name lowercase, pair -> set of lowercase FAA codes
             7. state abbr to state - key -> state abbr lowercase, pair -> str state full name lowercase
-            8. city abbr to city - key -> city abbr lowercase, pair -> city name full   """
+            8. city abbr to city - key -> city abbr lowercase, pair -> city name full
+            9. airport full to faa identifier - key -> airport full name, pair -> airport FAA code"""
+    
+    if airports_df is None:
+        airports_df = get_airports_dataframe()
     
     states_dict = {}    # type: dict[str, State]
     cities_dict = {}    # type: dict[str, City]
@@ -156,6 +161,7 @@ def generate_location_objects(airports_df:p.DataFrame) -> tuple[
 
     state_abbr_to_state = {}    # type: dict[str, str]    
     city_abbr_to_city = {}      # type: dict[str, str]
+    airport_names_to_faa = {}   # type: dict[str, str]
     
     state_list = list(airports_df[STATE].unique())
     for state in state_list:
@@ -189,10 +195,11 @@ def generate_location_objects(airports_df:p.DataFrame) -> tuple[
                 airport_obj = Airport(airport, airport_faa, airport_enplanements, city, city_abbr, state, state_abbr)
                 
                 airports_dict[airport_faa] = airport_obj
+                airport_names_to_faa[airport] = airport_faa
                 
                 states_to_airports[state].add(airport_faa)
                 cities_to_airports[city].add(airport_faa)
                 
     return states_dict, cities_dict, airports_dict, states_to_cities, \
         states_to_airports, cities_to_airports, state_abbr_to_state, \
-            city_abbr_to_city
+            city_abbr_to_city, airport_names_to_faa
