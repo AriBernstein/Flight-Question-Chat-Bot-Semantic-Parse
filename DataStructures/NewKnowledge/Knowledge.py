@@ -1,9 +1,16 @@
 from DataStructures.FlightLocations.Locations import State, City, Airport
 
-class Knowledge:
+class OriginDestinationException(Exception):
     def __init__(self) -> None:
+        super().__init__("Only call this method on OrigStateKnowledge, " + \
+                "DestStateKnowledge, OrigCityKnowledge, DestCityKnowledge, " + \
+                    "OrigAirportKnowledge, DestAirportKnowledge")
+
+class Knowledge:
+    def __init__(self, is_destination:bool=None) -> None:
         self._relevant = True
         self._known = False
+        self._is_destination = is_destination
         
     def relevant(self) -> bool:
         return self._relevant
@@ -20,6 +27,17 @@ class Knowledge:
         known_str = "known" if self._known else "unknown"
         return f"relevant, and currently {known_str}"
     
+    def is_base_type():
+        return True
+    
+    def is_destination(self) -> bool:
+        if self._is_destination is None: raise OriginDestinationException
+        return self._is_destination
+    
+    def is_origin(self) -> bool:
+        if self._is_destination is None: raise OriginDestinationException
+        return not self._is_destination
+    
     def __str__(self) -> str:
         return "Base Knowledge class instance. You're probably looking for " + \
             "one of my children."
@@ -29,7 +47,7 @@ class Knowledge:
     
     
 class StateKnowledge(Knowledge):
-    def __init__(self) -> None:
+    def __init__(self, origin=None) -> None:
         super().__init__()
         self._state = None
         
@@ -49,6 +67,18 @@ class StateKnowledge(Knowledge):
         
     def __repr__(self) -> str:
         return str(self)
+
+class OriginStateKnowledge(StateKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=True)
+    def __str__(self) -> str:
+        return "Origin" + super().__str__()
+
+class DestinationStateKnowledge(StateKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=False)
+    def __str__(self) -> str:
+        return "Destination" + super().__str__()
     
     
 class CityKnowledge(Knowledge):
@@ -70,6 +100,18 @@ class CityKnowledge(Knowledge):
     
     def __repr__(self) -> str:
         return str(self)
+        
+class OriginCityKnowledge(CityKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=True)
+    def __str__(self) -> str:
+        return "Origin" + super().__str__()
+
+class DestinationCityKnowledge(CityKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=False)
+    def __str__(self) -> str:
+        return "Destination" + super().__str__()
     
     
 class AirportKnowledge(Knowledge):
@@ -78,7 +120,7 @@ class AirportKnowledge(Knowledge):
         super().__init__()
         self._airport = None
         
-    def airport_city(self, airport:Airport) -> None:
+    def set_airport(self, airport:Airport) -> None:
         self._airport = airport
         
     def airport_obj(self) -> Airport:
@@ -91,3 +133,15 @@ class AirportKnowledge(Knowledge):
     
     def __repr__(self) -> str:
         return str(self)
+    
+class OriginAirportKnowledge(AirportKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=True)
+    def __str__(self) -> str:
+        return "Origin" + super().__str__()
+
+class DestinationAirportKnowledge(CityKnowledge):
+    def __init__(self) -> None:
+        super().__init__(origin=False)
+    def __str__(self) -> str:
+        return "Destination" + super().__str__()
