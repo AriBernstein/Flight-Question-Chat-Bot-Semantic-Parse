@@ -1,4 +1,5 @@
 from DataStructures.FlightLocations.Locations import State, City, Airport
+from datetime import date, time
 
 class OriginDestinationException(Exception):
     def __init__(self) -> None:
@@ -47,8 +48,8 @@ class Knowledge:
     
     
 class StateKnowledge(Knowledge):
-    def __init__(self, origin=None) -> None:
-        super().__init__()
+    def __init__(self, is_destination:bool=None) -> None:
+        super().__init__(is_destination)
         self._state = None
         
     def set_state(self, state:State) -> None:
@@ -70,21 +71,20 @@ class StateKnowledge(Knowledge):
 
 class OriginStateKnowledge(StateKnowledge):
     def __init__(self) -> None:
-        super().__init__(origin=True)
+        super().__init__(is_destination=False)
     def __str__(self) -> str:
         return "Origin" + super().__str__()
 
 class DestinationStateKnowledge(StateKnowledge):
     def __init__(self) -> None:
-        super().__init__(origin=False)
+        super().__init__(is_destination=True)
     def __str__(self) -> str:
         return "Destination" + super().__str__()
     
     
 class CityKnowledge(Knowledge):
-    
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, is_destination:bool=None) -> None:
+        super().__init__(is_destination)
         self._city = None
         
     def set_city(self, city:City) -> None:
@@ -116,8 +116,8 @@ class DestinationCityKnowledge(CityKnowledge):
     
 class AirportKnowledge(Knowledge):
     
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, is_destination:bool=None) -> None:
+        super().__init__(is_destination)
         self._airport = None
         
     def set_airport(self, airport:Airport) -> None:
@@ -136,12 +136,78 @@ class AirportKnowledge(Knowledge):
     
 class OriginAirportKnowledge(AirportKnowledge):
     def __init__(self) -> None:
-        super().__init__(origin=True)
+        super().__init__(is_destination=False)
     def __str__(self) -> str:
         return "Origin" + super().__str__()
 
 class DestinationAirportKnowledge(CityKnowledge):
     def __init__(self) -> None:
-        super().__init__(origin=False)
+        super().__init__(is_destination=True)
+    def __str__(self) -> str:
+        return "Destination" + super().__str__()
+    
+
+class TimeKnowledge(Knowledge):
+    def __init__(self, is_destination:bool=None) -> None:
+        self._time = None   # type: time
+        super().__init__(is_destination)
+        
+    def set_time(self, t:time) -> None:
+        self._time = t
+    
+    def time(self) -> time:
+        return self._time
+    
+    def __str__(self) -> str:
+        if self._time:
+            t = self._time.strftime("%H:%M")
+            return f"TimeKnowledge: {t}, {self.base_info_str()}"
+        return "TimeKnowledge: Empty"
+    
+    def __repr__(self) -> str:
+        return str(self)
+
+class OriginTimeKnowledge(TimeKnowledge):
+    def __init__(self) -> None:
+        super().__init__(is_destination=False)
+    def __str__(self) -> str:
+        return "Origin" + super().__str__()
+    
+class DestinationTimeKnowledge(TimeKnowledge):
+    def __init__(self) -> None:
+        super().__init__(is_destination=False)
+    def __str__(self) -> str:
+        return "Destination" + super().__str__()
+    
+    
+class DateKnowledge(Knowledge):
+    def __init__(self, is_destination:bool=None) -> None:
+        self._date = None   # type: time
+        super().__init__(is_destination)
+        
+    def set_date(self, d:date) -> None:
+        self._date = d
+    
+    def date(self) -> date:
+        return self._date
+    
+    def __str__(self) -> str:
+        if self._time:
+            t = self._time.strftime("%H:%M")
+            return f"TimeKnowledge: {t}, {self.base_info_str()}"
+        return "TimeKnowledge: Empty"
+    
+    def __repr__(self) -> str:
+        return str(self)
+
+class OriginDateKnowledge(DateKnowledge):
+    def __init__(self) -> None:
+        super().__init__(is_destination=False)
+    def __str__(self) -> str:
+        return "Origin" + super().__str__()
+    
+class DestinationDateKnowledge(DateKnowledge):
+    def __init__(self) -> None:
+        super().__init__(is_destination=False)
     def __str__(self) -> str:
         return "Destination" + super().__str__()
