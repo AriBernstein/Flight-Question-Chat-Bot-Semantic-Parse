@@ -31,7 +31,7 @@ FAA = "faa"
 AIRPORT = "airport_name"
 ENPLANEMENTS = "enplanements"
 
-def read_and_clean_csv_data() -> p.DataFrame:
+def get_airports_dataframe() -> p.DataFrame:
     """
     Read in airport and USA State abbreviation data from CSV files, convert into
     Pandas dataframe formatted as follows:
@@ -138,10 +138,14 @@ def generate_location_objects(airports_df:p.DataFrame) -> tuple[
                dict[str, City], dict[str, Airport], dict[str, set[str]], 
                dict[str, set[str]], dict[str, set[str]]]:
                 
-            1. states_dict - key -> state abbr, pair -> State Obj
-            2. cities_dict - key -> city full lowercase, pair -> City Obj
-            3. 
-    """
+            1. states - key -> state abbr, pair -> State Obj
+            2. cities - key -> city full lowercase, pair -> City Obj
+            3. airports - key -> FAA code lowercase, pair -> Airport obj
+            4. states to cities - key -> state abbr lowercase, pair -> set of city full lowercase city names
+            5. states to airports - key -> state abbr lowercase, pair -> set of lowercase FAA codes
+            6. cities to airports - key -> city full name lowercase, pair -> set of lowercase FAA codes
+            7. state abbr to state - key -> state abbr lowercase, pair -> str state full name lowercase
+            8. city abbr to city - key -> city abbr lowercase, pair -> city name full   """
     
     states_dict = {}    # type: dict[str, State]
     cities_dict = {}    # type: dict[str, City]

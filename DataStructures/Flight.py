@@ -19,7 +19,6 @@ class Flight:
                     self.destination == __o.destination and \
                         self.departure_time == __o.departure_time and \
                             self.arrival_time == __o.arrival_time
-        
         return False
         
     def __str__(self) -> str:
