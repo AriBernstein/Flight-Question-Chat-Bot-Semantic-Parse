@@ -28,6 +28,14 @@ class OntologyNode:
     
     def is_root(self) -> bool:
         return self._parent is None
+    
+    def ancestors(self) -> set['OntologyNode']:
+        a = set()
+        cur_ancestor = self
+        while not cur_ancestor.is_root():
+            a.add(cur_ancestor)
+            cur_ancestor = cur_ancestor.parent()
+        return a
         
     def __str__(self) -> str:
         return f"{self._ontology_label} - {self._children}"
