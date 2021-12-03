@@ -9,5 +9,6 @@ if __name__ == "__main__":
     # states_dict, cities_dict, airports_dict, states_to_cities, \
     #     states_to_airports, cities_to_airports, state_abbr_to_state, \
     #         city_abbr_to_city = generate_location_objects(x)
-    x = build_ontology_tree()
-    print(x.get_children()[0])
+    ontology_tree = build_ontology_tree()
+    print(ontology_tree.get_root())
+    print(ontology_tree.get_root().get_children()[0].get_children()[0].ancestors())
