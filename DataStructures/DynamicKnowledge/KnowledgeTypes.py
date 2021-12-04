@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from DataStructures.FlightLocations.Locations import State, City, Airport
+from DataStructures.FlightLocations.Locations import USState, City, Airport
 
 class OriginDestinationException(Exception):
     def __init__(self) -> None:
@@ -9,10 +9,11 @@ class OriginDestinationException(Exception):
                     "OrigAirportKnowledge, DestAirportKnowledge")
 
 class Knowledge:
-    def __init__(self, is_destination:bool=None) -> None:
+    def __init__(self, is_destination:bool=None, priority:int=-1) -> None:
         self._relevant = True
         self._known = False
         self._is_destination = is_destination
+        self._priority=priority
         
     def relevant(self) -> bool:
         return self._relevant
@@ -22,6 +23,9 @@ class Knowledge:
     
     def make_known(self) -> None:
         self._known = True
+        
+    def priority(self) ->int:
+        return self._priority
         
     def base_info_str(self) -> str:
         if not self._relevant:
@@ -39,7 +43,7 @@ class Knowledge:
     def is_origin(self) -> bool:
         if self._is_destination is None: raise OriginDestinationException
         return not self._is_destination
-    
+        
     def __str__(self) -> str:
         return "Base Knowledge class instance. You're probably looking for " + \
             "one of my children."
@@ -48,17 +52,18 @@ class Knowledge:
         return str(self)
 
 
+
 class StateKnowledge(Knowledge):
     def __init__(self, is_destination:bool=None) -> None:
-        super().__init__(is_destination)
+        super().__init__(is_destination=is_destination, priority=1)
         self._state = None
         
-    def set_state(self, state:State) -> None:
+    def set_state(self, state:USState) -> None:
         self._state = state
         
-    def state_obj(self) -> State:
+    def state_obj(self) -> USState:
         return self._state
-    
+       
     def info_str(self) -> str:
         return f"{str(self._state)}, {self.base_info_str}"
     
@@ -85,7 +90,7 @@ class DestinationStateKnowledge(StateKnowledge):
     
 class CityKnowledge(Knowledge):
     def __init__(self, is_destination:bool=None) -> None:
-        super().__init__(is_destination)
+        super().__init__(is_destination=is_destination, priority=2)
         self._city = None
         
     def set_city(self, city:City) -> None:
@@ -118,7 +123,7 @@ class DestinationCityKnowledge(CityKnowledge):
 class AirportKnowledge(Knowledge):
     
     def __init__(self, is_destination:bool=None) -> None:
-        super().__init__(is_destination)
+        super().__init__(is_destination=is_destination, priority=1)
         self._airport = None
         
     def set_airport(self, airport:Airport) -> None:

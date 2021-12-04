@@ -1,11 +1,11 @@
 from pprint import pprint
 import json
-from Utils.Utils import format_str_for_query, Locations
+from Utils.Utils import format_str_for_query, LocationsDB
 from Utils.GenerateLocations import get_airports_dataframe, generate_location_objects
 from Utils.ParseOntologyTree import build_ontology_tree
 from Utils.CallTripsParserAPI import get_trips_parser_semantic_analysis
 
-def small_demo(input:str="How many airports are in New York?") -> None:
+def small_demo(input:str="I want to go to go from jfk to lax.") -> None:
     """
     Check for wh-question, location, movement. 
     """
@@ -17,7 +17,9 @@ def small_demo(input:str="How many airports are in New York?") -> None:
     location_code = None
     
     logical_form = get_trips_parser_semantic_analysis(input)
-    # print(json.dumps(logical_form, indent=4))
+    
+    print(json.dumps(logical_form, indent=4))
+    
     for lf in logical_form:
         
         # Handle location
@@ -26,7 +28,7 @@ def small_demo(input:str="How many airports are in New York?") -> None:
             mentioned_a_location = True
             location_val = format_str_for_query(lf["LF:word"])
         elif lf_type == "REFERENTIAL-SEM":
-            location_val, location_code = Locations.query_location(
+            location_val, location_code = LocationsDB.query_location(
                 format_str_for_query(lf["LF:word"])
             )
             if not location_val is None:
@@ -39,7 +41,7 @@ def small_demo(input:str="How many airports are in New York?") -> None:
     if mentioned_a_location:
         print(f"Looks like you mentioned location: {location_val}")
         print("Here is a list of airports located there:")
-        print(Locations.cities_to_airports[location_val])
+        print(LocationsDB.cities_to_airports[location_val])
 
 
 if __name__ == "__main__":

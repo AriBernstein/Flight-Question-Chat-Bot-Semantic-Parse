@@ -2,7 +2,7 @@ from collections import defaultdict
 import pandas as p
 import re
 
-from DataStructures.FlightLocations.Locations import Airport, City, State
+from DataStructures.FlightLocations.Locations import Airport, City, USState
 
 # File locations
 _DIR = "DataSet/Locations/"
@@ -41,7 +41,7 @@ def get_airports_dataframe() -> p.DataFrame:
         Birmingham, BHM,     BHM,    BHM,   Birm...,     P-S,      1,516,075
         
     Returns:
-        p.DataFrame: Dataframe of form:
+        p.DataFrame: Dataframe of form
             city,       city_abbr,   state, state_abbr, faa, airport_name, enplanements
             birmingham,      None, alabama,         al, bhm, birmingha...,      1516075
     """
@@ -105,7 +105,8 @@ def get_airports_dataframe() -> p.DataFrame:
         state_abbr = state_abbr.values[0] if len(state_abbr) >= 1 else None
         
         # Build row for each airport.
-        airports_in_state = ap_df.iloc[state_row_index + 1:state_rows[i + 1]].copy()    # type: p.DataFrame
+        airports_in_state = \
+            ap_df.iloc[state_row_index + 1:state_rows[i + 1]].copy()    # type: p.DataFrame
         airports_in_state[STATE] = state
         airports_in_state[STATE_ABBR] = state_abbr
         airports_in_state[CITY] = airports_in_state[CITY].apply(clean_city)
@@ -122,7 +123,7 @@ def get_airports_dataframe() -> p.DataFrame:
 
         
 def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
-        dict[str, State], dict[str, City], dict[str, Airport], 
+        dict[str, USState], dict[str, City], dict[str, Airport], 
         dict[str, set[City]], dict[str, set[Airport]], dict[str, set[Airport]]]:
     """
     Load airports & locations into data structures accessibly by the semantic
@@ -150,7 +151,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
     if airports_df is None:
         airports_df = get_airports_dataframe()
     
-    states_dict = {}    # type: dict[str, State]
+    states_dict = {}    # dict[str, USState]
     cities_dict = {}    # type: dict[str, City]
     airports_dict = {}  # type: dict[str, Airport]
     
@@ -164,21 +165,25 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
     
     state_list = list(airports_df[STATE].unique())
     for state in state_list:
-        airports_in_state = airports_df[airports_df[STATE] == state].reset_index(drop=True)
+        airports_in_state = \
+            airports_df[airports_df[STATE] == state].reset_index(drop=True)
         state_abbr = airports_in_state.loc[0, STATE_ABBR]
         
         if not state_abbr or state_abbr == "None":  # Not enough time :(
             continue
 
-        state_obj = State(state, state_abbr)
+        state_obj = USState(state, state_abbr)
         
         states_dict[state_obj.abbr()] = state_obj
         state_abbr_to_state[state_abbr] = state
         
         for city in list(airports_in_state[CITY].unique()):
-            airports_in_city = airports_in_state[airports_in_state[CITY] == city].reset_index(drop=True)
+            airports_in_city = \
+                airports_in_state[
+                    airports_in_state[CITY] == city].reset_index(drop=True)
             city_abbr = airports_in_city.loc[0, CITY_ABBR]
-            city_obj = City(city, city_abbr, state_obj.state_name, state_obj.state_abbr)
+            city_obj = \
+                City(city, city_abbr, state_obj.state_name, state_obj.state_abbr)
             
             cities_dict[city] = city_obj
             
@@ -188,10 +193,15 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
             states_to_cities[state].add(city)
             
             for airport in list(airports_in_city[AIRPORT].unique()):
-                individual_airport_series = airports_in_city[airports_in_city[AIRPORT] == airport].head(1).reset_index(drop=True)
+                individual_airport_series = \
+                    airports_in_city[airports_in_city[AIRPORT] == airport
+                                     ].head(1).reset_index(drop=True)
                 airport_faa = individual_airport_series[FAA].iloc[0]
-                airport_enplanements = individual_airport_series.loc[0, ENPLANEMENTS]
-                airport_obj = Airport(airport, airport_faa, airport_enplanements, city, city_abbr, state, state_abbr)
+                airport_enplanements = \
+                    individual_airport_series.loc[0, ENPLANEMENTS]
+                airport_obj = \
+                    Airport(airport, airport_faa, airport_enplanements,
+                            city, city_abbr, state, state_abbr)
                 
                 airports_dict[airport_faa] = airport_obj
                 airport_names_to_faa[airport] = airport_faa

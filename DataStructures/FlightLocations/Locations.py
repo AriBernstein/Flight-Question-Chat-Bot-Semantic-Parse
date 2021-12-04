@@ -29,34 +29,31 @@ class BaseLocation:
                 self._location_priority == __o.priority()
         return False
 
+
 class Country(BaseLocation):
-    
-    def __init__(self,
-                 country_name=USA_NAME, country_abbr=USA_ABBR,
-                 priority=1) -> None:
-        super().__init__(name=country_name, abbr=country_abbr, priority=priority)
-        self.country_name=country_name
-        self.country_abbr=country_abbr
-        
+    def __init__(self, name=USA_NAME, abbr=USA_ABBR, priority=1) -> None:
+        super().__init__(name=name, abbr=abbr, priority=priority)
+        self.country_name=name
+        self.country_abbr=abbr
+
 
 class USState(Country):
-    def __init__(self, state_name:str, state_abbr:str, 
-                 priority:int=2) -> None:
-        super().__init__(base_name=state_name, base_abbr=state_abbr, priority=priority)
-        self.state_name = state_name
-        self.state_abbr = state_abbr
+    def __init__(self, name:str, abbr:str, priority:int=2) -> None:
+        super().__init__(name=name, abbr=abbr, priority=priority)
+        self.state_name = name
+        self.state_abbr = abbr
     
     def country_loc(self) -> Country:
         return self.__class__.__bases__[0]
                     
                     
 class City(USState):
-    def __init__(self, city_name: str, city_abbr: str,
+    def __init__(self, name: str, abbr: str,
                  state_name: str, state_abbr: str, 
                  priority=3) -> None:
         super().__init__(state_name, state_abbr, priority)
-        self.city_name = city_name
-        self.city_abbr = city_abbr
+        self.city_name = name
+        self.city_abbr = abbr
     
     def state_loc(self) -> USState:
         return self.__class__.__bases__[0]
@@ -67,14 +64,14 @@ class City(USState):
         
 class Airport(City):
     def __init__(self,
-                 airport_name:str, airport_abbr:str, enplanements:int,
+                 name:str, abbr:str, enplanements:int,
                  city_name: str, city_abbr: str,
                  state_name: str, state_abbr: str,
                  priority:int=4) -> None:
         
         super().__init__(city_name, city_abbr, state_name, state_abbr, priority)
-        self.airport_name = airport_name
-        self.airport_abbr = airport_abbr
+        self.airport_name = name
+        self.airport_abbr = abbr
         self.enplanements = enplanements
             
     def city_loc(self) -> City:
