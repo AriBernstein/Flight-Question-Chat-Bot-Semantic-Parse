@@ -41,6 +41,7 @@ def small_demo(input:str="How many airports are in New York?") -> None:
         print("Here is a list of airports located there:")
         print(Locations.cities_to_airports[location_val])
 
+
 if __name__ == "__main__":
     small_demo()
     
