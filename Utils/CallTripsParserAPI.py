@@ -2,6 +2,7 @@ from collections import OrderedDict
 import xmltodict
 import requests
 import re
+
 """
 Call the TRIPS Parser API to retrieve semantic interpretations of input.
 API Documentation can be found here: http://trips.ihmc.us/parser/api.html   """
@@ -36,28 +37,29 @@ def _call_trips_parser_api(sentence:str) -> dict:
     
     # Format XML output into new dictionary with input, parse tree 
     # representation, logical form representation
-    d = xmltodict.parse(resp.content)["trips-parser-output"]
+    dict_rep = xmltodict.parse(resp.content)["trips-parser-output"]
 
     # Handle single or multiple parses
-    if MULTIPLE_PARSES_FIELD in d:
-        for parse in d[MULTIPLE_PARSES_FIELD][UTT_FIELD]:
+    if MULTIPLE_PARSES_FIELD in dict_rep:
+        for parse in dict_rep[MULTIPLE_PARSES_FIELD][UTT_FIELD]:
             ret[PARSES_FIELD].append([parse[TREE_FIELD], parse[TERMS_FIELD]])
-
     else:
-        d = d[UTT_FIELD]
-        ret[PARSES_FIELD].append([d[TREE_FIELD], d[TERMS_FIELD]])
+        dict_rep = dict_rep[UTT_FIELD]
+        ret[PARSES_FIELD].append([dict_rep[TREE_FIELD], dict_rep[TERMS_FIELD]])
 
     ret["num_parses"] = len(ret[PARSES_FIELD])
-
     return ret
 
 
 def get_trips_parser_semantic_analysis(sentence:str=SAMPLE_SENTENCE) -> list[OrderedDict]:
     parser_data_raw = _call_trips_parser_api(sentence)
-    return parser_data_raw[PARSES_FIELD][0][1][RDF][RDF_DESCR]
-    
 
-# if __name__ == "__main__":
-#     parser_data = _call_trips_parser_api(SAMPLE_SENTENCE)
-
-#     print(json.dumps(parser_data[PARSES_FIELD][0][1][RDF][RDF_DESCR], indent=4))
+    if len(parser_data_raw[PARSES_FIELD]) == 1:
+        return parser_data_raw[PARSES_FIELD][0][1][RDF][RDF_DESCR]
+    else:
+        ret = []
+        for partial_parse in parser_data_raw[PARSES_FIELD]:
+            for info in partial_parse[1][RDF][RDF_DESCR]:
+                if not isinstance(info, str):
+                    ret.append(info)
+        return ret
