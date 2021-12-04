@@ -1,6 +1,11 @@
+import re
 from typing import Type
+
 from Utils.GenerateLocations import generate_location_objects
 from DataStructures.FlightLocations.Locations import State, City, Airport
+
+def format_str_for_query(s:str) -> str:
+    return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
 
 class Static:
     """
@@ -66,16 +71,16 @@ class Locations(Static):
         return None if airport_str is None else Locations.airports_dict[airport_str]
     
     @staticmethod
-    def query_location(loc_str) -> Type[State]:
+    def query_location(loc_str) -> tuple[Type[State], int]:
         for i in range(1, 4):
-            loc_str_new, code = Locations._loc_exists(loc_str_new, code)
+            loc_str_new, code = Locations._loc_exists(loc_str_new, i)
             if not loc_str_new is None:
                 if code == 1:
-                    return Locations.query_state(loc_str)
+                    return Locations.query_state(loc_str), code
                 elif code == 2:
-                    return Locations.query_city(loc_str)
+                    return Locations.query_city(loc_str), code
                 elif code == 3:
-                    return Locations.query_airport(loc_str)
+                    return Locations.query_airport(loc_str), code
                 else:
                     raise Exception(f"location query return code was {code}. That's weird :(")
-        return None
+        return None, None

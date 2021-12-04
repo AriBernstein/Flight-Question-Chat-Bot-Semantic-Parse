@@ -118,7 +118,6 @@ def get_airports_dataframe() -> p.DataFrame:
         cleaned_ap_df[ENPLANEMENTS].apply(lambda x: '0' if x == '' else x)
     cleaned_ap_df[ENPLANEMENTS] = \
         cleaned_ap_df[ENPLANEMENTS].str.replace(',', '').astype(int)
-    print(cleaned_ap_df)
     return cleaned_ap_df
 
         
