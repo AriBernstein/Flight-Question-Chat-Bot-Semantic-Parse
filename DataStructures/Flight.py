@@ -22,9 +22,9 @@ class Flight:
         return False
         
     def __str__(self) -> str:
-        return f"Flight {self.flight_number}, {self.origin.abbr()} -> " + \
-            f"{self.destination.abbr()}, departing {self.departure_time}"
+        return f"Flight {self.flight_number}, {self.origin.abbr().upper()} " + \
+            f"-> {self.destination.abbr()}, departing {self.departure_time}"
             
     def __repr__(self) -> str:
-        return f"Flight {self.flight_number} ({self.origin.abbr()} -> " + \
-            f"{self.destination.abbr()})"
+        return f"Flight {self.flight_number} ({self.origin.abbr().upper()} " + \
+            f"-> {self.destination.abbr()})"

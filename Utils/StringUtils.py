@@ -2,7 +2,7 @@ import re
 
 from Utils.CustomExceptions import ExpectingRelativeException, InvalidModeException
 
-def format_str_for_query(s:str) -> str:
+def clean_str(s:str) -> str:
     return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
 
 def either_any(list_len:int) -> str:

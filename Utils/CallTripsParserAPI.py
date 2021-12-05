@@ -3,6 +3,7 @@ import xmltodict
 import requests
 import re
 
+from Utils.StringUtils import clean_str
 """
 Call the TRIPS Parser API to retrieve semantic interpretations of input.
 API Documentation can be found here: http://trips.ihmc.us/parser/api.html   """

@@ -75,7 +75,7 @@ def get_airports_dataframe() -> p.DataFrame:
     
     def clean_city(city_name:str) -> str:
         name_split = re.split('[,\/]', city_name)
-        return name_split[0].strip()
+        return name_split[0].strip().lower()
 
     def city_abbr(city_name:str) -> str:
         """
@@ -172,7 +172,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
         if not state_abbr or state_abbr == "None":  # Not enough time :(
             continue
 
-        state_obj = USState(state, state_abbr)
+        state_obj = USState(state, state_abbr, state, state_abbr)
         
         states_dict[state_obj.name()] = state_obj
         state_abbr_to_state[state_abbr] = state
@@ -183,7 +183,10 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                     airports_in_state[CITY] == city].reset_index(drop=True)
             city_abbr = airports_in_city.loc[0, CITY_ABBR]
             city_obj = \
-                City(city, city_abbr, state_obj.state_name, state_obj.state_abbr)
+                City(city, city_abbr,
+                     city, city_abbr,
+                     state_obj.state_name,
+                     state_obj.state_abbr)
             
             cities_dict[city] = city_obj
             
@@ -200,7 +203,9 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                 airport_enplanements = \
                     individual_airport_series.loc[0, ENPLANEMENTS]
                 airport_obj = \
-                    Airport(airport, airport_faa, airport_enplanements,
+                    Airport(airport, airport_faa,
+                            airport, airport_faa,
+                            airport_enplanements,
                             city, city_abbr, state, state_abbr)
                 
                 airports_dict[airport_faa] = airport_obj
@@ -208,7 +213,10 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                 
                 states_to_airports[state].add(airport_faa)
                 cities_to_airports[city].add(airport_faa)
-                
+    
+    # Cuz New York City is treated as New York
+    cities_dict["new york city"] = cities_dict["new york"]
+    
     return states_dict, cities_dict, airports_dict, states_to_cities, \
         states_to_airports, cities_to_airports, state_abbr_to_state, \
             city_abbr_to_city, airport_names_to_faa

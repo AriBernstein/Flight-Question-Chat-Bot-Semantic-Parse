@@ -1,11 +1,14 @@
+from Utils.StringUtils import clean_str
+
+
 USA_NAME = "united states of america"
 USA_ABBR = "usa"
 
 class BaseLocation:
     def __init__(self, name:str="base location", 
                  abbr:str="bl", priority:int=0) -> None:
-        self._name = name
-        self._abbr = abbr
+        self._name = clean_str(name)
+        self._abbr = clean_str(abbr)
         self._location_priority = priority
     
     def name(self) -> str:
@@ -28,30 +31,44 @@ class BaseLocation:
             return self._name == __o.name() and \
                 self._location_priority == __o.priority()
         return False
+    
+    def __hash__(self) -> int:
+        return hash(self.name)
 
 
 class Country(BaseLocation):
-    def __init__(self, name=USA_NAME, abbr=USA_ABBR, priority=1) -> None:
+    def __init__(self, name:str=USA_NAME, abbr:str=USA_ABBR, 
+                 country_name:str=USA_NAME, country_abbr:str=USA_ABBR,
+                 priority=1) -> None:
         super().__init__(name=name, abbr=abbr, priority=priority)
-        self.country_name=name
-        self.country_abbr=abbr
+        self.country_name=country_name
+        self.country_abbr=country_abbr
 
 
 class USState(Country):
-    def __init__(self, name:str, abbr:str, priority:int=2) -> None:
-        super().__init__(name=name, abbr=abbr, priority=priority)
+    def __init__(self, name:str, abbr:str,
+                 state_name:str, state_abbr:str,
+                 country_name=USA_NAME, country_abbr=USA_ABBR,
+                 priority:int=2,) -> None:
+        super().__init__(name=name, abbr=abbr,
+                         country_name=country_name, 
+                         country_abbr=country_abbr,
+                         priority=priority)
         self.state_name = name
         self.state_abbr = abbr
     
     def country_loc(self) -> Country:
         return self.__class__.__bases__[0]
-                    
+
                     
 class City(USState):
     def __init__(self, name: str, abbr: str,
+                 city_name:str, city_abbr:str,
                  state_name: str, state_abbr: str, 
+                 country_name:str=USA_NAME, country_abbr:str=USA_ABBR,
                  priority=3) -> None:
-        super().__init__(state_name, state_abbr, priority)
+        super().__init__(name, abbr, state_name, state_abbr,
+                         country_name, country_abbr, priority)
         self.city_name = name
         self.city_abbr = abbr
     
@@ -67,9 +84,11 @@ class Airport(City):
                  name:str, abbr:str, enplanements:int,
                  city_name: str, city_abbr: str,
                  state_name: str, state_abbr: str,
+                 country_name:str=USA_NAME, country_abbr:str=USA_ABBR,
                  priority:int=4) -> None:
         
-        super().__init__(city_name, city_abbr, state_name, state_abbr, priority)
+        super().__init__(name, abbr, city_name, city_abbr, state_name, state_abbr,
+                         country_name, country_abbr, priority)
         self.airport_name = name
         self.airport_abbr = abbr
         self.enplanements = enplanements
