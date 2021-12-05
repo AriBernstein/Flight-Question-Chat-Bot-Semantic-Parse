@@ -1,21 +1,24 @@
 from datetime import date, time
+from typing import Type
 from DataStructures.KnowledgeStructures.KnowledgeTypeBase import Knowledge
+from Utils.CustomExceptions import InvalidTypeException
 
 
 class TimeKnowledge(Knowledge):
     def __init__(self, is_destination:bool=None) -> None:
-        self._time = None   # type: time
         super().__init__(is_destination)
         
     def set_time(self, t:time) -> None:
-        self._time = t
+        if not isinstance(t, time):
+            raise InvalidTypeException(str(Type(t)), "time")
+        self._value = t
     
     def time(self) -> time:
-        return self._time
+        return self._value
     
     def __str__(self) -> str:
-        if self._time:
-            t = self._time.strftime("%H:%M")
+        if self.known():
+            t = self.time().strftime("%H:%M")
             return f"TimeKnowledge: {t}, {self.base_info_str()}"
         return "TimeKnowledge: Empty"
     
@@ -41,6 +44,8 @@ class DateKnowledge(Knowledge):
         super().__init__(is_destination)
         
     def set_date(self, d:date) -> None:
+        if not isinstance(d, date):
+            raise InvalidTypeException(str(Type(date)), "date")        
         self._date = d
     
     def date(self) -> date:

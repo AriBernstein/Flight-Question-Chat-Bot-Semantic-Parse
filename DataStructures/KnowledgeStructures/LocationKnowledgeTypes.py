@@ -1,5 +1,7 @@
+from typing import Type
 from DataStructures.LocationTypes import USState, City, Airport
 from DataStructures.KnowledgeStructures.KnowledgeTypeBase import Knowledge
+from Utils.CustomExceptions import InvalidTypeException
 
 
 class StateKnowledge(Knowledge):
@@ -8,6 +10,8 @@ class StateKnowledge(Knowledge):
         self._state = None
         
     def set_state(self, state:USState) -> None:
+        if not isinstance(state, USState):
+            raise InvalidTypeException(str(Type(USState)), "USState")
         self._state = state
         
     def state_obj(self) -> USState:
@@ -43,6 +47,8 @@ class CityKnowledge(Knowledge):
         self._city = None
         
     def set_city(self, city:City) -> None:
+        if not isinstance(city, City):
+            raise InvalidTypeException(str(Type(city)), "City")
         self._city = city
         
     def city_obj(self) -> City:
@@ -76,6 +82,9 @@ class AirportKnowledge(Knowledge):
         self._airport = None
         
     def set_airport(self, airport:Airport) -> None:
+        if not isinstance(airport, Airport):
+            raise InvalidTypeException(str(Type(Airport)), "Airport")
+        
         self._airport = airport
         
     def airport_obj(self) -> Airport:

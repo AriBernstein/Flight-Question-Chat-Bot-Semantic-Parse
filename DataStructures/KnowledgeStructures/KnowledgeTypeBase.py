@@ -1,25 +1,26 @@
 
-class OriginDestinationException(Exception):
-    def __init__(self) -> None:
-        super().__init__("Only call this method on OrigStateKnowledge, " + \
-                "DestStateKnowledge, OrigCityKnowledge, DestCityKnowledge, " + \
-                    "OrigAirportKnowledge, DestAirportKnowledge")
+from datetime import date, time
+from typing import Union
+
+from DataStructures.LocationTypes import City, Country, USState
+from Utils.CustomExceptions import OriginDestinationException
 
 class Knowledge:
-    def __init__(self, is_destination:bool=None, priority:int=-1) -> None:
+    def __init__(self, value:Union[Country, USState, City, date, time]=None, 
+                 is_destination:bool=None, priority:int=-1) -> None:
         self._relevant = True
-        self._known = False
         self._is_destination = is_destination
         self._priority=priority
+        self._value = value
         
     def relevant(self) -> bool:
         return self._relevant
     
     def known(self) -> bool:
-        return self._known
+        return self._value is not None
     
-    def make_known(self) -> None:
-        self._known = True
+    def value(self) -> Union[Country, USState, City, date, time]:
+        return self._value
         
     def priority(self) ->int:
         return self._priority
