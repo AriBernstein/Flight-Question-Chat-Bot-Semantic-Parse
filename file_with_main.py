@@ -1,12 +1,14 @@
 from datetime import time
 from pprint import pprint
 import json
+from Utils.GenerateFlights import generate_flights
 from Utils.Utils import LocationsDB
 from Utils.GenerateLocations import get_airports_dataframe, generate_location_objects
 from Utils.ParseOntologyTree import build_ontology_tree
 from Utils.CallTripsParserAPI import get_trips_parser_semantic_analysis
+from Utils.StringUtils import clean_str
 
-def small_demo(input:str="Want to fly to Texas?") -> None:
+def small_demo(input:str="Want to fly to New York City?") -> None:
     """
     Check for wh-question, location, movement. 
     """
@@ -27,10 +29,10 @@ def small_demo(input:str="Want to fly to Texas?") -> None:
         lf_type = lf["LF:type"]
         if lf_type == "GEOGRAPHIC-REGION":
             mentioned_a_location = True
-            location_val = lf["LF:word"]
+            location_val = clean_str(lf["LF:word"])
         elif lf_type == "REFERENTIAL-SEM" and "LF:word" in lf:
             location_val, location_code = LocationsDB.query_location(
-                lf["LF:word"]
+                clean_str(lf["LF:word"])
             )
             if not location_val is None:
                 mentioned_a_location = True
@@ -40,14 +42,18 @@ def small_demo(input:str="Want to fly to Texas?") -> None:
             asked_question = True
                 
     if mentioned_a_location:
-        print(f"Looks like you mentioned location: {location_val}")
+        print(f"Looks like you mentioned location: {str(location_val).title()}")
         print("Here is a list of airports located there:")
         
-        print(LocationsDB.find_airports(location_val))
+        print(LocationsDB.find_airports_faa(location_val))
         
 
 if __name__ == "__main__":
-    small_demo()
+    
+    # nyc = LocationsDB.query_city("new_york_city")
+    # tx = LocationsDB.query_state("texas")
+    # x = generate_flights(5, [tx], [nyc, ] )
+    # small_demo()
     # x = get_airports_dataframe()
     # states_dict, cities_dict, airports_dict, states_to_cities, \
     #     states_to_airports, cities_to_airports, state_abbr_to_state, \
@@ -58,3 +64,13 @@ if __name__ == "__main__":
     # ontology_tree = build_ontology_tree()
     # print(ontology_tree.get_root())
     # print(ontology_tree.get_root().get_children()[0].get_children()[0].ancestors())
+    
+    ny_airports = LocationsDB.find_airports_faa("Montana")
+    
+    la_airports = LocationsDB.find_airports_faa("Los Angeles")
+    print(ny_airports)
+    print(la_airports)
+    
+    x = generate_flights(5, list(ny_airports), list(la_airports), departure_time_mode=5)
+    for f in x:
+        print(f)

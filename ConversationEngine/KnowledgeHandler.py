@@ -1,11 +1,10 @@
-from DataStructures.FlightLocations.Locations import USState, City, Airport
-from DataStructures.KnowledgeStructures.LocationKnowledgeTypes import \
-    OriginStateKnowledge, DestinationStateKnowledge, \
-        OriginCityKnowledge, DestinationCityKnowledge, \
-            OriginAirportKnowledge, DestinationAirportKnowledge
-            
+from DataStructures.QueryTypes import QueryTypes, AirportsQuery, \
+    SingleFlightQuery, RoundTripFlightQuery
 
-# Define orderings that correlate with knowledge hierarchies, integers
-# representing pointers to them. These integers increase with the level of
-# information we are looking for, which is itself trimmed in reverse order of
-# information needed.
+class KnowledgeHandler:    
+    
+    def __init__(self) -> None:
+        self._o_loc_pointer = self._d_loc_pointer = \
+            self._o_date_time_pointer = self._d_date_time_pointer = 0
+    
+    

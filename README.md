@@ -1,3 +1,5 @@
+Note, Origin - Destination is known by the parser in the context of the first and/or second trip in a round trip flight. Departure Arrival is just for flights and can be applied to either.s
+
 Conversational Cases
 
 Conversations to handle - things to expect:
