@@ -2,7 +2,7 @@ from collections import defaultdict
 import pandas as p
 import re
 
-from DataStructures.FlightLocations.Locations import Airport, City, USState
+from DataStructures.LocationTypes import Airport, City, USState
 
 # File locations
 _DIR = "DataSet/Locations/"

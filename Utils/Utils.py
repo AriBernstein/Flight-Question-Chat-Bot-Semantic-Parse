@@ -2,19 +2,19 @@ import re
 from typing import Type
 
 from Utils.GenerateLocations import generate_location_objects
-from DataStructures.FlightLocations.Locations import USState, City, Airport
+from DataStructures.LocationTypes import USState, City, Airport
 
 def format_str_for_query(s:str) -> str:
     return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
 
-class Static:
+class StaticClass:
     """
     Quick hack to make static classes.  """
     
     def __init__(self) -> None:
         raise TypeError("Static classes cannot be instantiated")
 
-class LocationsDB(Static):
+class LocationsDB(StaticClass):
     states_dict, cities_dict, airports_dict, states_to_cities, \
         states_to_airports, cities_to_airports, state_abbr_to_state, \
             city_abbr_to_city, airport_names_to_faa = generate_location_objects()
