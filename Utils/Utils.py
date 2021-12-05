@@ -3,6 +3,7 @@ from typing import Type
 from Utils.GenerateLocations import generate_location_objects
 from Utils.CustomExceptions import InvalidModeException
 from DataStructures.LocationTypes import USState, City, Airport
+from Utils.StringUtils import format_str_for_query
         
 class StaticClass:
     """
@@ -28,6 +29,8 @@ class LocationsDB(StaticClass):
                 country from the dictionaries in this class, as well as the 
                 number representing which of the three data sets it found. """
         if not 1 <= mode <= 3: raise InvalidModeException(mode, 1, 3)
+        
+        loc_str = format_str_for_query(loc_str)
         
         if mode == 1:
             if loc_str in LocationsDB.state_abbr_to_state:
@@ -65,10 +68,27 @@ class LocationsDB(StaticClass):
         airport_str, _ = LocationsDB._loc_exists(airport_str, 1)
         return None if airport_str is None else LocationsDB.airports_dict[airport_str]
     
+    
     @staticmethod
-    def query_location(loc_str) -> tuple[Type[USState], int]:
+    def find_airports(loc_str:str) -> set[Airport]:
         for i in range(1, 4):
-            loc_str_new, code = LocationsDB._loc_exists(loc_str_new, i)
+            loc_str_new, code = LocationsDB._loc_exists(loc_str, i)
+            if not loc_str_new is None:
+                if code == 1:
+                    return LocationsDB.states_to_airports[loc_str_new]
+                elif code == 2:
+                    return LocationsDB.cities_to_airports[loc_str_new]
+                elif code == 3:
+                    return {LocationsDB.query_airport(loc_str_new)}
+                else:
+                    raise Exception("location query return code was " + \
+                        f"{code}. That's weird :(")
+                
+    
+    @staticmethod
+    def query_location(loc_str:str) -> tuple[Type[USState], int]:
+        for i in range(1, 4):
+            loc_str_new, code = LocationsDB._loc_exists(loc_str, i)
             if not loc_str_new is None:
                 if code == 1:
                     return LocationsDB.query_state(loc_str), code

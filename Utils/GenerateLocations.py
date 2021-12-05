@@ -174,7 +174,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
 
         state_obj = USState(state, state_abbr)
         
-        states_dict[state_obj.abbr()] = state_obj
+        states_dict[state_obj.name()] = state_obj
         state_abbr_to_state[state_abbr] = state
         
         for city in list(airports_in_state[CITY].unique()):
