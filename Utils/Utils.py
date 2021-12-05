@@ -1,32 +1,9 @@
-import re
 from typing import Type
-from Utils.CustomExceptions import InvalidModeException
 
 from Utils.GenerateLocations import generate_location_objects
+from Utils.CustomExceptions import InvalidModeException
 from DataStructures.LocationTypes import USState, City, Airport
-
-def format_str_for_query(s:str) -> str:
-    return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
-
-def pretty_list(l:list[str], capitalization_mode:int=0) -> str:
-    if len(l) == 0: return ""
-    elif not 0 <= capitalization_mode <= 3:
-        raise(InvalidModeException(capitalization_mode, 0, 3))
-    
-    r = ""    
-    for k in l:
-        if capitalization_mode == 0:
-            r += k
-        elif capitalization_mode == 1:
-            r += k.title()
-        elif capitalization_mode == 2:
-            r += k.upper()
-        elif capitalization_mode == 3:
-            r += k.lower()
-        r += ", "
-            
-    return r[:-2]
-
+        
 class StaticClass:
     """
     Quick hack to make static classes.  """
