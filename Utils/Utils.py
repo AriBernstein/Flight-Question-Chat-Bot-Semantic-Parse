@@ -1,11 +1,31 @@
 import re
 from typing import Type
+from Utils.CustomExceptions import InvalidModeException
 
 from Utils.GenerateLocations import generate_location_objects
 from DataStructures.LocationTypes import USState, City, Airport
 
 def format_str_for_query(s:str) -> str:
     return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
+
+def pretty_list(l:list[str], capitalization_mode:int=0) -> str:
+    if len(l) == 0: return ""
+    elif not 0 <= capitalization_mode <= 3:
+        raise(InvalidModeException(capitalization_mode, 0, 3))
+    
+    r = ""    
+    for k in l:
+        if capitalization_mode == 0:
+            r += k
+        elif capitalization_mode == 1:
+            r += k.title()
+        elif capitalization_mode == 2:
+            r += k.upper()
+        elif capitalization_mode == 3:
+            r += k.lower()
+        r += ", "
+            
+    return r[:-2]
 
 class StaticClass:
     """
@@ -20,7 +40,7 @@ class LocationsDB(StaticClass):
             city_abbr_to_city, airport_names_to_faa = generate_location_objects()
             
     @staticmethod
-    def _loc_exists(loc_str:str, code:int) -> tuple[str, int]:
+    def _loc_exists(loc_str:str, mode:int) -> tuple[str, int]:
         """
         Args:
             loc_str (str): possible location from input.
@@ -30,18 +50,16 @@ class LocationsDB(StaticClass):
             tuple[str, int]: string in format to query for state, city, or
                 country from the dictionaries in this class, as well as the 
                 number representing which of the three data sets it found. """
-        if not 1 <= code <= 3:
-            raise Exception("Code parameter must be an integer between " + \
-                "zero and three.")
+        if not 1 <= mode <= 3: raise InvalidModeException(mode, 1, 3)
         
-        if code == 1:
+        if mode == 1:
             if loc_str in LocationsDB.state_abbr_to_state:
                 return LocationsDB.state_abbr_to_state[loc_str], 1
             if loc_str in LocationsDB.states_dict:
                 return loc_str, 1
             return None, None
         
-        elif code == 2:
+        elif mode == 2:
             if loc_str in LocationsDB.city_abbr_to_city:
                 return LocationsDB.city_abbr_to_city[loc_str], 2
             if loc_str in LocationsDB.cities_dict:
