@@ -1,10 +1,14 @@
+from random import randint
 from typing import Type
 
 from Utils.GenerateLocations import generate_location_objects
 from Utils.CustomExceptions import InvalidModeException
 from DataStructures.LocationTypes import USState, City, Airport
 from Utils.StringUtils import clean_str
-        
+
+def get_random_list_item(l:list) -> object:
+    return list(l)[randint(0, len(l) -1)]
+
 class StaticClass:
     """
     Quick hack to make static classes.  """

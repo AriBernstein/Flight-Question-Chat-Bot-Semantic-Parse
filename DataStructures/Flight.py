@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from Utils.StringUtils import pretty_date_time as p
 from DataStructures.LocationTypes import Airport
 
 class Flight:
@@ -23,7 +24,8 @@ class Flight:
         
     def __str__(self) -> str:
         return f"Flight {self.flight_number}, {self.origin.abbr().upper()} " + \
-            f"-> {self.destination.abbr()}, departing {self.departure_time}"
+            f"-> {self.destination.abbr()}, departing " + \
+                f"{p(self.departure_time)}, arriving {p(self.arrival_time)}"
             
     def __repr__(self) -> str:
         return f"Flight {self.flight_number} ({self.origin.abbr().upper()} " + \
