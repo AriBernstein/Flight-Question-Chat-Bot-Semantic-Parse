@@ -13,7 +13,7 @@ def either_any(list_len:int) -> str:
 def pretty_date_time(t:datetime) -> str:
     return t.strftime("%m-%d-%Y %H:%M")
 
-def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=False) -> str:
+def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=True) -> str:
     """
     Turn list into pretty string.
     Modes:
@@ -26,7 +26,7 @@ def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=False) -> s
         l (list[str]): List to stringify.
         capitalization_mode (int, optional): Affects formatting of strings in 
             list. See method description.
-        add_and (bool): If true, add and before the final element.
+        add_and (bool): If true (default), add 'and' before the final element.
             Ex. "One, Two, Three" -> "One, Two, and Three"
 
     Returns:

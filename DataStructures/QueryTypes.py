@@ -16,9 +16,6 @@ class QueryTypes(Enum):
     flights_round_trip = "flight_round_trip"
 
 # Orderings that correlate with knowledge hierarchies.
-_QUESTION_HIERARCHY = \
-    [QueryTypes.flights_round_trip, QueryTypes.flight_one_way, QueryTypes.airport]
-
 _O_LOCATIONS_HIERARCHY = \
     [OriginStateKnowledge, OriginCityKnowledge, OriginAirportKnowledge]
 

@@ -14,3 +14,5 @@ class LiveConversation(StaticClass):
             
     def conclude() -> str:
         return CONCLUSION
+    
+    
