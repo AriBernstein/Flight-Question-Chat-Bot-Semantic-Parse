@@ -12,6 +12,12 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
     """
     Check for wh-question, location, movement. 
     """
+    LF_TYPE_FIELD = "LF:type"
+    LF_WORD_FIELD = "LF:word"
+    GEO_REGION_ONT = "geographic-region"
+    GENERAL_REFERENTIAL_ONT = "referential-sem"
+    SA_WH_QUESTION_ONT = "sa_wh-question"
+    
     ont_tree = build_ontology_tree()
     asked_question = False
     mentioned_a_location = False
@@ -27,26 +33,26 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
     for lf in logical_form:
         
         # Handle location
-        lf_type = lf["LF:type"]
+        lf_type = str(lf[LF_TYPE_FIELD]).lower()
         ancestors = ont_tree.get_ont_node_ancestors(lf_type.strip().lower())
-        if "GEOGRAPHIC-REGION".lower() in ancestors:
+        if GEO_REGION_ONT.lower() in ancestors:
             location_obj, location_code = LocationsDB.query_location(
-                    clean_str(lf["LF:word"]))
+                    clean_str(lf[LF_WORD_FIELD]))
             
             if location_obj is not None:
                 mentioned_a_location = True
-                location_mentioned = clean_str(lf["LF:word"])
+                location_mentioned = clean_str(lf[LF_WORD_FIELD])
             
-        elif "REFERENTIAL-SEM".lower() in ancestors:
-            if "LF:word" in lf:
+        elif GENERAL_REFERENTIAL_ONT.lower() in ancestors:
+            if LF_WORD_FIELD in lf:
                 location_obj, location_code = \
-                    LocationsDB.query_location(clean_str(lf["LF:word"]))
+                    LocationsDB.query_location(clean_str(lf[LF_WORD_FIELD]))
                 if location_obj is not None:
                     mentioned_a_location = True
                     abbr_not_recognized_as_location = True
-                    location_mentioned = clean_str(lf["LF:word"])
+                    location_mentioned = clean_str(lf[LF_WORD_FIELD])
                                     
-        elif lf_type =="SA_WH-QUESTION":
+        elif lf_type == SA_WH_QUESTION_ONT:
             asked_question = True
                 
     if mentioned_a_location:
