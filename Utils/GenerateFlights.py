@@ -12,6 +12,17 @@ def _random_date_in_range(start_date:date, end_date:date) -> date:
     return start_date + timedelta(randrange((end_date - start_date).days))
 
 def random_time_in_range(start_time:time, end_time:time) -> time:
+    """
+    Generate a random time betwen two ranges.
+
+    Args:
+        start_time (time): lower bound of range in which to select date.
+        end_time (time): higher bound of range in which to select date.
+
+    Returns: time:
+        Randomly generated time between start_time and end_time with minutes
+        limited to increments of five.  """
+
     start_hour = start_time.hour()
     start_min = start_time.min()
     end_hour = end_time.hour()
@@ -40,11 +51,9 @@ def random_time_from_mode(mode:int=0) -> time:
             5 -> Evening
             6 -> Late evening/early night
 
-    Raises:
-        InvalidModeException: If less than 0 or greater than 6.
+    Raises: InvalidModeException: If less than 0 or greater than 6.
 
-    Returns:
-        time: A randomized time object from the selected range. """
+    Returns: time: A randomized time object from the selected range.    """
         
     if mode == 0:
         hour_range = (0, 24)

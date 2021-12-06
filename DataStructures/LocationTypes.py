@@ -63,7 +63,7 @@ class USState(Country):
     def country_loc(self) -> Country:
         return self.__class__.__bases__[0]
 
-                    
+
 class City(USState):
     def __init__(self, name: str, abbr: str,
                  city_name:str, city_abbr:str,

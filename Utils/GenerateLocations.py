@@ -79,12 +79,11 @@ def get_airports_dataframe() -> p.DataFrame:
 
     def city_abbr(city_name:str) -> str:
         """
-        Args:
-            name (str): Full name of a city.
+        Args: name (str): Full name of a city.
 
-        Returns:
-            str: If city_name is made up of more than one word, return the first
-                letter of each word comprising it. Otherwise return city_name.
+        Returns: str: 
+            If city_name is made up of more than one word, return the first
+            letter of each word comprising it. Otherwise return city_name.
                 Ex. new york -> ny, chicago -> chicago. """
                 
         name_split = city_name.split()
@@ -105,8 +104,8 @@ def get_airports_dataframe() -> p.DataFrame:
         state_abbr = state_abbr.values[0] if len(state_abbr) >= 1 else None
         
         # Build row for each airport.
-        airports_in_state = \
-            ap_df.iloc[state_row_index + 1:state_rows[i + 1]].copy()    # type: p.DataFrame
+        airports_in_state = ap_df.iloc[
+            state_row_index + 1:state_rows[i + 1]].copy() # type: p.DataFrame
         airports_in_state[STATE] = state
         airports_in_state[STATE_ABBR] = state_abbr
         airports_in_state[CITY] = airports_in_state[CITY].apply(clean_city)
@@ -134,19 +133,45 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
             None, call get_airports_dataframe().
 
     Returns:
-        tuple[ dict[str, str], dict[str, str], dict[str, State],  
-               dict[str, City], dict[str, Airport], dict[str, set[str]], 
-               dict[str, set[str]], dict[str, set[str]]]:
+        tuple[ dict[str, State], dict[str, City], dict[str, Airport], 
+               dict[str, set[str], dict[str, set[str], dict[str, set[str], 
+               dict[str, str], dict[str, str], dict[str, str]]:
                 
-            1. states - key -> state abbr, pair -> State Obj
-            2. cities - key -> city full lowercase, pair -> City Obj
-            3. airports - key -> FAA code lowercase, pair -> Airport obj
-            4. states to cities - key -> state abbr lowercase, pair -> set of city full lowercase city names
-            5. states to airports - key -> state abbr lowercase, pair -> set of lowercase FAA codes
-            6. cities to airports - key -> city full name lowercase, pair -> set of lowercase FAA codes
-            7. state abbr to state - key -> state abbr lowercase, pair -> str state full name lowercase
-            8. city abbr to city - key -> city abbr lowercase, pair -> city name full
-            9. airport full to faa identifier - key -> airport full name, pair -> airport FAA code"""
+            states_dict (index 0):
+                key  -> state name full lowercase
+                pair -> State Obj
+            
+            cities_dict (index 1):
+                key  -> city full lowercase
+                pair -> City Obj
+            
+            airports_dict:
+                key  -> FAA code lowercase
+                pair -> Airport obj
+            
+            states_to_cities:
+                key  -> state abbr lowercase
+                pair -> set of city full lowercase city names
+            
+            states_to_airports
+                key  -> state name lowercase
+                pair -> set of lowercase FAA codes
+            
+            cities_to_airports:
+                key  -> city full name lowercase
+                pair -> set of lowercase FAA codes
+            
+            state_abbr_to_state:
+                key  -> state abbr lowercase
+                pair -> str state full name lowercase
+            
+            city_abbr_to_city:
+                key  -> city abbr lowercase
+                pair -> city name full
+            
+            airport_names_to_faa:
+                key  -> airport full name lowercase
+                pair -> airport FAA code    """
     
     if airports_df is None:
         airports_df = get_airports_dataframe()
@@ -163,6 +188,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
     city_abbr_to_city = {}      # type: dict[str, str]
     airport_names_to_faa = {}   # type: dict[str, str]
     
+    # For each state
     state_list = list(airports_df[STATE].unique())
     for state in state_list:
         airports_in_state = \
@@ -177,6 +203,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
         states_dict[state_obj.name()] = state_obj
         state_abbr_to_state[state_abbr] = state
         
+        # For each city in each state
         for city in list(airports_in_state[CITY].unique()):
             airports_in_city = \
                 airports_in_state[
@@ -195,6 +222,7 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                 
             states_to_cities[state].add(city)
             
+            # For each airport in each city
             for airport in list(airports_in_city[AIRPORT].unique()):
                 individual_airport_series = \
                     airports_in_city[airports_in_city[AIRPORT] == airport
@@ -214,6 +242,6 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                 states_to_airports[state].add(airport_faa)
                 cities_to_airports[city].add(airport_faa)
     
-    return states_dict, cities_dict, airports_dict, states_to_cities, \
-        states_to_airports, cities_to_airports, state_abbr_to_state, \
-            city_abbr_to_city, airport_names_to_faa
+    return states_dict, cities_dict, airports_dict, \
+        states_to_cities, states_to_airports, cities_to_airports, \
+            state_abbr_to_state, city_abbr_to_city, airport_names_to_faa
