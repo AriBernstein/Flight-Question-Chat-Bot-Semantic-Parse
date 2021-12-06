@@ -21,6 +21,8 @@ class LocationsDB(StaticClass):
         states_to_airports, cities_to_airports, state_abbr_to_state, \
             city_abbr_to_city, airport_names_to_faa = generate_location_objects()
             
+    MODES_DICT = {1: "state", 2: "city", 3: "airport"}
+    
     @staticmethod
     def _loc_exists(loc_str:str, mode:int) -> tuple[str, int]:
         """
@@ -80,13 +82,10 @@ class LocationsDB(StaticClass):
 
             if not loc_str_new is None:
                 if code == 1:
-                    print("a")
                     return LocationsDB.states_to_airports[loc_str_new]
                 elif code == 2:
-                    print("b")
                     return LocationsDB.cities_to_airports[loc_str_new]
                 elif code == 3:
-                    print("c")
                     return {LocationsDB.query_airport(loc_str_new).abbr()}
                 else:
                     raise Exception("location query return code was " + \

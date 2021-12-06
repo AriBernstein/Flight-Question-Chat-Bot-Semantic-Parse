@@ -214,9 +214,6 @@ def generate_location_objects(airports_df:p.DataFrame=None) -> tuple[
                 states_to_airports[state].add(airport_faa)
                 cities_to_airports[city].add(airport_faa)
     
-    # Cuz New York City is treated as New York
-    cities_dict["new york city"] = cities_dict["new york"]
-    
     return states_dict, cities_dict, airports_dict, states_to_cities, \
         states_to_airports, cities_to_airports, state_abbr_to_state, \
             city_abbr_to_city, airport_names_to_faa

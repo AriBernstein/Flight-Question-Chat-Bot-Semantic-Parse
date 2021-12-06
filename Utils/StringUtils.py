@@ -3,9 +3,11 @@ import re
 
 from Utils.CustomExceptions import ExpectingRelativeException, InvalidModeException
 
-def clean_str(s:str) -> str:
-    return re.sub('[^0-9a-zA-Z]+', ' ', s).lower().strip()
-
+def clean_str(s:str, spaces:bool=True, lowercase=True) -> str:
+    d = ' ' if spaces else '-'
+    ret = re.sub('[^0-9a-zA-Z]+', d, s).strip()
+    return ret.lower() if lowercase else ret
+    
 def either_any(list_len:int) -> str:
     if list_len < 2: raise ExpectingRelativeException(list_len, 2, 5)
     return "either" if list_len == 2 else "any"
@@ -32,6 +34,8 @@ def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=True) -> st
     Returns:
         str: List as a pretty string.   """
     
+    l = list(l) if isinstance(l, set) else l 
+    
     if len(l) == 0: return ""
     elif not 0 <= capitalization_mode <= 3:
         raise(InvalidModeException(capitalization_mode, 0, 3))
@@ -46,8 +50,9 @@ def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=True) -> st
         elif capitalization_mode == 3:
             ret += l[i].lower()
             
-        if i != len(l):
+        if i != len(l) - 1:
             ret += ', '
-        elif i == len(l) - 2:
+        elif i == len(l) - 2 and add_and:
             ret += "and "
-        
+    
+    return ret

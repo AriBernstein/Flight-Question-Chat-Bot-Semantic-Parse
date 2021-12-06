@@ -20,7 +20,7 @@ def _parseList(tag) -> tuple:
 def _read_ontology_html(fp:str=_ONTOLOGY_HTML_FP) -> tuple[str, list]:
     with open(_ONTOLOGY_HTML_FP, "r+") as fp:
         soup = BeautifulSoup(fp, "lxml")
-    
+        
     return _parseList(soup.ul)
 
 
@@ -29,19 +29,23 @@ def _build_ontology_tree_helper(cur_node: Union[tuple, str],
                                 node_dict:dict=None) -> OntologyNode:
     
     if isinstance(cur_node, str):   # Leaf
+        new_ont_node = OntologyNode(cur_node, parent)
+        if node_dict is not None: node_dict[cur_node] = new_ont_node
         return OntologyNode(cur_node, parent)
     
     ont_label = cur_node[0]
-    ont_node = OntologyNode(ont_label, parent)
+    new_ont_node = OntologyNode(ont_label, parent)
     
     if node_dict is not None:
-        node_dict[ont_label] = ont_node
+        node_dict[ont_label] = new_ont_node
 
     ont_children = []   # type: list[OntologyNode]
         
-    ont_children = [_build_ontology_tree_helper(c, ont_node, node_dict) for c in cur_node[1]]
-    ont_node.set_children(ont_children)
-    return ont_node
+    ont_children = [_build_ontology_tree_helper(c, new_ont_node, node_dict) \
+        for c in cur_node[1]]
+    new_ont_node.set_children(ont_children)
+    
+    return new_ont_node
     
 
 def build_ontology_tree(fp:str=_ONTOLOGY_HTML_FP) -> OntologyTree:
