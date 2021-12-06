@@ -35,7 +35,7 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
         # Handle location
         lf_type = str(lf[LF_TYPE_FIELD]).lower()
         ancestors = ont_tree.get_ont_node_ancestors(lf_type.strip().lower())
-        if GEO_REGION_ONT.lower() in ancestors:
+        if GEO_REGION_ONT in ancestors:
             location_obj, location_code = LocationsDB.query_location(
                     clean_str(lf[LF_WORD_FIELD]))
             
@@ -43,7 +43,7 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
                 mentioned_a_location = True
                 location_mentioned = clean_str(lf[LF_WORD_FIELD])
             
-        elif GENERAL_REFERENTIAL_ONT.lower() in ancestors:
+        elif GENERAL_REFERENTIAL_ONT in ancestors:
             if LF_WORD_FIELD in lf:
                 location_obj, location_code = \
                     LocationsDB.query_location(clean_str(lf[LF_WORD_FIELD]))
@@ -58,17 +58,23 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
     if mentioned_a_location:
         print(f"Looks like you mentioned location: {str(location_obj).title()}")
         if abbr_not_recognized_as_location:
-            print(f"By the way, TRIPS doesn't even realize that {location_mentioned} is a {LocationsDB.MODES_DICT[location_code]}")
+            print("By the way, TRIPS doesn't even realize that " + \
+                f"{location_mentioned} is a {LocationsDB.MODES_DICT[location_code]}. " + \
+                    f"It considers the phrase {location_mentioned} to be of " + \
+                        f"ontological type {lf_type}. Instead it just used some " + \
+                            "ancestor-related pattern matching to figure it out :)")
+        
         print("Here is a list of airports located there:")
-        print(pretty_list(LocationsDB.find_airports_faa(location_obj.name())))
+        print(pretty_list(LocationsDB.find_airports_faa(location_obj.search_id())))
         
         if asked_question:
             print("We detect a wh question, ie when, where, or what!")
         
-
+        
 if __name__ == "__main__":
     
-    demo_sentences = ["Want to fly to NYC?", "How about Texas?", "I want to fly out of LAX."]
+    demo_sentences = ["Want to fly to NYC?", "How about Texas?",
+                      "I want to fly out of LAX.", "I want to fly from JFK."]
     for s in demo_sentences:
         small_demo(s)
         print("---------------------\n")

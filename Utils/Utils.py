@@ -40,21 +40,21 @@ class LocationsDB(StaticClass):
             if loc_str in LocationsDB.state_abbr_to_state:
                 return LocationsDB.state_abbr_to_state[loc_str], 1
             if loc_str in LocationsDB.states_dict:
-                return LocationsDB.states_dict[loc_str].name(), 1
+                return LocationsDB.states_dict[loc_str].search_id(), 1
             return None, None
         
         elif mode == 2:
             if loc_str in LocationsDB.city_abbr_to_city:
                 return LocationsDB.city_abbr_to_city[loc_str], 2
             if loc_str in LocationsDB.cities_dict:
-                return LocationsDB.cities_dict[loc_str].name(), 2
+                return LocationsDB.cities_dict[loc_str].search_id(), 2
             return None, None
         
         elif mode == 3:
             if loc_str in LocationsDB.airport_names_to_faa:
                 return LocationsDB.airport_names_to_faa[loc_str], 3
             if loc_str in LocationsDB.airports_dict:
-                return LocationsDB.airports_dict[loc_str].abbr(), 3
+                return LocationsDB.airports_dict[loc_str].search_id(), 3
             return None, None
         
         raise InvalidModeException(mode, 1, 3)

@@ -11,6 +11,9 @@ class BaseLocation:
         self._abbr = clean_str(abbr)
         self._location_priority = priority
     
+    def search_id(self) -> str:
+        return self._name
+    
     def name(self) -> str:
         return self._name
     
@@ -89,9 +92,12 @@ class Airport(City):
         
         super().__init__(name, abbr, city_name, city_abbr, state_name, state_abbr,
                          country_name, country_abbr, priority)
-        self.airport_name = name
-        self.airport_abbr = abbr
-        self.enplanements = enplanements
+        self._airport_name = name
+        self._airport_abbr = abbr
+        self._enplanements = enplanements
+        
+    def search_id(self) -> str:
+        return self._abbr
             
     def city_loc(self) -> City:
         return self.__class__.__bases__[0]
@@ -101,3 +107,6 @@ class Airport(City):
     
     def country_loc(self) -> Country:
         return self.state_loc().country_loc()
+    
+    def enplanements(self) -> int:
+        return self._enplanements
