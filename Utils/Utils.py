@@ -74,7 +74,6 @@ class LocationsDB(StaticClass):
         airport_str, _ = LocationsDB._loc_exists(airport_str, 3)
         return None if airport_str is None else LocationsDB.airports_dict[airport_str]
     
-    
     @staticmethod
     def find_airports_faa(loc_str:str) -> set[str]:
         for i in range(1, 4):

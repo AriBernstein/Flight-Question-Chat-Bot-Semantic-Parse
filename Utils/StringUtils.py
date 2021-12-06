@@ -42,13 +42,13 @@ def pretty_list(l:list[str], capitalization_mode:int=0, add_and:bool=True) -> st
     ret = ""
     for i in range(len(l)):
         if capitalization_mode == 0:
-            ret += l[i]
+            ret += str(l[i])
         elif capitalization_mode == 1:
-            ret += l[i].title()
+            ret += str(l[i]).title()
         elif capitalization_mode == 2:
-            ret += l[i].upper()
+            ret += str(l[i]).upper()
         elif capitalization_mode == 3:
-            ret += l[i].lower()
+            ret += str(l[i]).lower()
             
         if i != len(l) - 1:
             ret += ', '

@@ -57,8 +57,8 @@ class USState(Country):
                          country_name=country_name, 
                          country_abbr=country_abbr,
                          priority=priority)
-        self.state_name = name
-        self.state_abbr = abbr
+        self.state_name = state_name
+        self.state_abbr = state_abbr
     
     def country_loc(self) -> Country:
         return self.__class__.__bases__[0]
@@ -72,8 +72,8 @@ class City(USState):
                  priority=3) -> None:
         super().__init__(name, abbr, state_name, state_abbr,
                          country_name, country_abbr, priority)
-        self.city_name = name
-        self.city_abbr = abbr
+        self.city_name = city_name
+        self.city_abbr = city_abbr
     
     def state_loc(self) -> USState:
         return self.__class__.__bases__[0]

@@ -1,3 +1,4 @@
+from random import randint
 from datetime import time
 from pprint import pprint
 import json
@@ -17,9 +18,12 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
     GEO_REGION_ONT = "geographic-region"
     GENERAL_REFERENTIAL_ONT = "referential-sem"
     SA_WH_QUESTION_ONT = "sa_wh-question"
+    SA_YN_QUESTION_ONT = "sa_yn-question"
+    
     
     ont_tree = build_ontology_tree()
-    asked_question = False
+    asked_wh_question = False
+    asked_yn_question = False
     mentioned_a_location = False
     mentioned_travel = False
     something_about_flights = False
@@ -52,29 +56,45 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
                     abbr_not_recognized_as_location = True
                     location_mentioned = clean_str(lf[LF_WORD_FIELD])
                                     
-        elif lf_type == SA_WH_QUESTION_ONT:
-            asked_question = True
-                
+        if SA_WH_QUESTION_ONT in ancestors:
+            asked_wh_question = True
+        if SA_YN_QUESTION_ONT in ancestors:
+            asked_yn_question = True
+                            
     if mentioned_a_location:
-        print(f"Looks like you mentioned location: {str(location_obj).title()}")
+        print(f"\nLooks like you mentioned {LocationsDB.MODES_DICT[location_code]}: {str(location_obj).title()}")
         if abbr_not_recognized_as_location:
             print("By the way, TRIPS doesn't even realize that " + \
                 f"{location_mentioned} is a {LocationsDB.MODES_DICT[location_code]}. " + \
-                    f"It considers the phrase {location_mentioned} to be of " + \
-                        f"ontological type {lf_type}. Instead it just used some " + \
+                    f"It considers the phrase \"{location_mentioned}\" to be of " + \
+                        f"ontological type \"{lf_type}\". Instead it just used some " + \
                             "ancestor-related pattern matching to figure it out :)")
         
-        print("Here is a list of airports located there:")
-        print(pretty_list(LocationsDB.find_airports_faa(location_obj.search_id())))
+        airports_at_loc = LocationsDB.find_airports_faa(location_obj.search_id())
+        if len(airports_at_loc) > 1:
+            print("Here is a list of airports located there:")
+            print(pretty_list(airports_at_loc))
+        else:
+            print(f"Here are between 3 and 6 randomly generated flights out of {str(location_obj).title()}:")
+            dest_state = "new york" if location_obj.state_name != "new york" else "california"
+            flights_list = generate_flights(num_flights=randint(3, 6), 
+                                            origin_range=[location_mentioned],
+                                            dest_range=[dest_state])
+            for f in flights_list:
+                print('\t' + str(f))
         
-        if asked_question:
-            print("We detect a wh question, ie when, where, or what!")
-        
+    if asked_wh_question:
+        print("\nWh question detected! IE. when, where, or what! (Though specifically not 'why'.)")
+    
+    if asked_yn_question:
+        print("\nYes-No question detected!")
+
         
 if __name__ == "__main__":
     
-    demo_sentences = ["Want to fly to NYC?", "How about Texas?",
-                      "I want to fly out of LAX.", "I want to fly from JFK."]
+    demo_sentences = ["Can we fly to NYC?", "How about Texas?",
+                      "I want to fly out of LAX.", "I want to fly from JFK.",
+                      "Are there flights out of california tomorrow?"]
     for s in demo_sentences:
         small_demo(s)
         print("---------------------\n")

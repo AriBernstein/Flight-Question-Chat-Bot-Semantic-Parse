@@ -9,32 +9,33 @@ LF_WORD = "LF:word"
 
 # -> Semantic values
 # --> Location
-TO_FROM = "PATH"
-GEOGRAPHIC_LOC = "GEOGRAPHIC-REGION"
-REFERENTIAL_SEM = "REFERENTIAL-SEM"
-TO_LOCATION = "TO-LOC"
-FROM_LOCATION = "FROM-LOC"
-SOURCE_AS_LOC = "SOURCE-AS-LOC"
+TO_FROM = "path"
+GEOGRAPHIC_LOC = "geographic-region"
+REFERENTIAL_SEM = "referential-sem"
+TO_LOCATION = "to-loc"
+FROM_LOCATION = "from-loc"
+SOURCE_AS_LOC = "source-as-loc"
 
 # --> Date/Time (highest ancestor to closest)
-ABY_TIME = "ANY-TIME-OBJECT"
-RELATIVE_TIME = "TIME-LOC"  # Parent of today/tomorrow
-TODAY = "TODAY"
-TOMORROW = "TOMORROW"
-EVENT_TIME_REL = "EVENT_TIME_REL"
-START_TIME = "START_TIME"
+ABY_TIME = "any-time-object"
+RELATIVE_TIME = "time-loc"  # Parent of today/tomorrow
+TODAY = "today"
+TOMORROW = "tomorrow"
+EVENT_TIME_REL = "event_time_rel"
+START_TIME = "start_time"
 
-INTERVAL = "TIME-INTERVAL"
-RELATIVE_DATE = "DATE_OBJ_IN"
-MONTH = "MONTH"
-WEEK = "WEEK"
-WEEK_OBJ = "WEEK_OBJECT"    # Sometimes, "this week" is caught with this one
-DAY_STAGE = "DAY_STAGE" # Parent of "Morning", "Night", "Evening", ...
-MONTH_NAME = "MONTH_NAME"
-AFTERNOON = "AFTERNOON"
-DAY_STAGE_PM = "DAY-STAGE-PM"
-EVENING = "EVENING"
-NIGHT = "NIGHT"
+INTERVAL = "time-interval"
+RELATIVE_DATE = "date_obj_in"
+MONTH = "month"
+WEEK = "week"
+WEEK_OBJ = "week_object"    # Usually for cases like "they had a long week", but
+                            # "this week" is caught with this one
+DAY_STAGE = "day_stage" # Parent of "Morning", "Night", "Evening", ...
+MONTH_NAME = "month_name"
+AFTERNOON = "afternoon"
+DAY_STAGE_PM = "day-stage-pm"
+EVENING = "evening"
+NIGHT = "night"
 
 
 # Query hierarchy - ordered from most to least information required to complete
