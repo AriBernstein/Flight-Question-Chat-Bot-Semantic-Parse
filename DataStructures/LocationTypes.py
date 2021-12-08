@@ -1,5 +1,7 @@
 from Utils.StringUtils import clean_str
 
+"""
+Classes representing locations recognized by the semantic analysis. """
 
 USA_NAME = "united states of america"
 USA_ABBR = "usa"
@@ -11,7 +13,7 @@ class BaseLocation:
         self._abbr = clean_str(abbr)
         self._location_priority = priority
     
-    def search_id(self) -> str:
+    def get_key(self) -> str:
         return self._name
     
     def name(self) -> str:
@@ -96,7 +98,7 @@ class Airport(City):
         self._airport_abbr = abbr
         self._enplanements = enplanements
         
-    def search_id(self) -> str:
+    def get_key(self) -> str:
         return self._abbr
             
     def city_loc(self) -> City:

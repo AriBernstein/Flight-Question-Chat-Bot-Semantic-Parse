@@ -4,7 +4,10 @@ from random import randint, randrange
 from DataStructures.Flight import Flight
 from DataStructures.LocationTypes import BaseLocation, Country, USState, Airport
 from Utils.CustomExceptions import InvalidModeException
-from Utils.Utils import LocationsDB, get_random_list_item
+from Utils.Utils import LocationsDB as LBD, get_random_list_item
+
+"""
+Methods for the purpose of generating flight instances. """
 
 num_flights_counter = 100
 
@@ -100,12 +103,10 @@ def generate_flights(num_flights:int,
         
         # Find departure & arrival airports.
         origin_airport = get_random_list_item(
-            LocationsDB.find_airports_obj(
-                origin_range[randint(0, len(origin_range) -1)]))
+            LBD.find_airports_obj(origin_range[randint(0, len(origin_range) -1)]))
         
         destination_airport = get_random_list_item(
-            LocationsDB.find_airports_obj(
-                dest_range[randint(0, len(dest_range) -1)]))
+            LBD.find_airports_obj(dest_range[randint(0, len(dest_range) -1)]))
         
         flight_date = \
             _random_date_in_range(flight_date_l_r, flight_date_h_r)

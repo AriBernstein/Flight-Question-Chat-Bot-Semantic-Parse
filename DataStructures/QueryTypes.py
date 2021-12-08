@@ -8,7 +8,12 @@ from DataStructures.KnowledgeStructures.DateTimeKnowledgeTypes import \
 from DataStructures.KnowledgeStructures.LocationKnowledgeTypes import \
     DestinationAirportKnowledge, DestinationCityKnowledge, \
         DestinationStateKnowledge, OriginAirportKnowledge, \
-            OriginCityKnowledge, OriginStateKnowledge      
+            OriginCityKnowledge, OriginStateKnowledge
+            
+
+"""
+Classes representing different types of informational queries that this chatbot
+is designed to handle.  """
 
 class QueryTypes(Enum):
     airport = "airport"

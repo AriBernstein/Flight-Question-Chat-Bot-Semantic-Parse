@@ -8,9 +8,12 @@ class OriginDestinationException(Exception):
 
 
 class InvalidTypeException(Exception):
-    def __init__(self, given_type:str, expected_type:str) -> None:
-        super().__init__(
-            f"Invalid type, received: {given_type}, expected: {expected_type}.")
+    def __init__(self, given_type:str, expected_type:str, 
+                 field_name:str=None, class_name:str=None) -> None:
+        msg = f"Invalid type, received: {given_type}, expected: {expected_type}"
+        msg += ", in field: " + field_name if field_name else ""
+        msg += " in class: " + class_name if class_name else "" + '.'
+        super().__init__(msg)
         
         
 class InvalidModeException(Exception):

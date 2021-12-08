@@ -3,7 +3,7 @@ from datetime import time
 from pprint import pprint
 import json
 from Utils.GenerateFlights import generate_flights
-from Utils.Utils import LocationsDB
+from Utils.Utils import LocationsDB as LDB
 from Utils.GenerateLocations import get_airports_dataframe, generate_location_objects
 from Utils.ParseOntologyTree import build_ontology_tree
 from Utils.CallTripsParserAPI import get_trips_parser_semantic_analysis
@@ -40,7 +40,7 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
         lf_type = str(lf[LF_TYPE_FIELD]).lower()
         ancestors = ont_tree.get_ont_node_ancestors(lf_type.strip().lower())
         if GEO_REGION_ONT in ancestors:
-            location_obj, location_code = LocationsDB.query_location(
+            location_obj, location_code = LDB.query_location(
                     clean_str(lf[LF_WORD_FIELD]))
             
             if location_obj is not None:
@@ -50,7 +50,7 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
         elif GENERAL_REFERENTIAL_ONT in ancestors:
             if LF_WORD_FIELD in lf:
                 location_obj, location_code = \
-                    LocationsDB.query_location(clean_str(lf[LF_WORD_FIELD]))
+                    LDB.query_location(clean_str(lf[LF_WORD_FIELD]))
                 if location_obj is not None:
                     mentioned_a_location = True
                     abbr_not_recognized_as_location = True
@@ -62,15 +62,15 @@ def small_demo(input:str="I want to fly out of LAX.") -> None:
             asked_yn_question = True
                             
     if mentioned_a_location:
-        print(f"\nLooks like you mentioned {LocationsDB.MODES_DICT[location_code]}: {str(location_obj).title()}")
+        print(f"\nLooks like you mentioned {LDB.MODES_DICT[location_code]}: {str(location_obj).title()}")
         if abbr_not_recognized_as_location:
             print("By the way, TRIPS doesn't even realize that " + \
-                f"{location_mentioned} is a {LocationsDB.MODES_DICT[location_code]}. " + \
+                f"{location_mentioned} is a {LDB.MODES_DICT[location_code]}. " + \
                     f"It considers the phrase \"{location_mentioned}\" to be of " + \
                         f"ontological type \"{lf_type}\". Instead it just used some " + \
                             "ancestor-related pattern matching to figure it out :)")
         
-        airports_at_loc = LocationsDB.find_airports_faa(location_obj.search_id())
+        airports_at_loc = LDB.find_airports_faa(location_obj.get_key())
         if len(airports_at_loc) > 1:
             print("Here is a list of airports located there:")
             print(pretty_list(airports_at_loc))
@@ -100,27 +100,27 @@ if __name__ == "__main__":
         print("---------------------\n")
 
     
-    # nyc = LocationsDB.query_city("new_york_city")
-    # tx = LocationsDB.query_state("texas")
-    # x = generate_flights(5, [tx], [nyc, ] )
+    nyc_obj = LDB.query_city("new_york_city")
+    tx_obj = LDB.query_state("texas")
+    x = generate_flights(5, [tx_obj.get_key()], [nyc_obj.get_key()] )
 
-    # x = get_airports_dataframe()
-    # states_dict, cities_dict, airports_dict, states_to_cities, \
-    #     states_to_airports, cities_to_airports, state_abbr_to_state, \
-    #         city_abbr_to_city, airport_names_to_faa = generate_location_objects(x)
+    x = get_airports_dataframe()
+    states_dict, cities_dict, airports_dict, states_to_cities, \
+        states_to_airports, cities_to_airports, state_abbr_to_state, \
+            city_abbr_to_city, airport_names_to_faa = generate_location_objects(x)
             
-    # # print(airports_dict["jfk"].priority())
+    # print(airports_dict["jfk"].priority())
     
-    # ontology_tree = build_ontology_tree()
-    # print(ontology_tree.get_root())
-    # print(ontology_tree.get_root().get_children()[0].get_children()[0].ancestors())
+    ontology_tree = build_ontology_tree()
+    print(ontology_tree.get_root())
+    print(ontology_tree.get_root().get_children()[0].get_children()[0].ancestors())
     
-    # ny_airports = LocationsDB.find_airports_faa("Montana")
+    ny_airports = LDB.find_airports_faa("Montana")
     
-    # la_airports = LocationsDB.find_airports_faa("Los Angeles")
-    # print(ny_airports)
-    # print(la_airports)
+    la_airports = LDB.find_airports_faa("Los Angeles")
+    print(ny_airports)
+    print(la_airports)
     
-    # x = generate_flights(5, list(ny_airports), list(la_airports), departure_time_mode=5)
-    # for f in x:
-    #     print(f)
+    x = generate_flights(5, list(ny_airports), list(la_airports), departure_time_mode=5)
+    for f in x:
+        print(f)

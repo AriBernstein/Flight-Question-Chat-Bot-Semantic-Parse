@@ -1,15 +1,18 @@
 from datetime import datetime
 import re
 
-from Utils.CustomExceptions import InvalidModeException
+from Utils.CustomExceptions import InvalidModeException, InvalidTypeException
 
 """
 File with utils related to string beautification.   """
 
 def clean_str(s:str, spaces:bool=True, lowercase=True) -> str:
-    d = ' ' if spaces else '-'
-    ret = re.sub('[^0-9a-zA-Z]+', d, s).strip()
-    return ret.lower() if lowercase else ret
+    try:
+        d = ' ' if spaces else '-'
+        ret = re.sub('[^0-9a-zA-Z]+', d, s).strip()
+        return ret.lower() if lowercase else ret
+    except TypeError:
+        raise InvalidTypeException(str(type(s)), "str")
 
 def pretty_date_time(t:datetime) -> str:
     return t.strftime("%m-%d-%Y %H:%M")

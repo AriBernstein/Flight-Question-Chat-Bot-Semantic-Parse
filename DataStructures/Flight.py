@@ -4,6 +4,19 @@ from Utils.StringUtils import pretty_date_time as p
 from DataStructures.LocationTypes import Airport
 
 class Flight:
+    """
+    Object representing a scheduled flight.
+    
+    Fields:
+        flight_number (int): UID of this Flight instance.
+        
+        origin (Airport): Airport of origin.
+        
+        destination (Airport): Airport of destination.
+        
+        departure_time (datetime): date/time of departure.
+        
+        arrival_time (datetime): date/time of arrival.  """
     
     def __init__(self, flight_number:int, origin:Airport, destination:Airport, 
                  departure_time:datetime, arrival_time:datetime) -> None:

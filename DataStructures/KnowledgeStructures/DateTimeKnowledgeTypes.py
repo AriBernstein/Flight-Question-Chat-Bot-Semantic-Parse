@@ -3,6 +3,10 @@ from typing import Type
 from DataStructures.KnowledgeStructures.KnowledgeTypeBase import Knowledge
 from Utils.CustomExceptions import InvalidTypeException
 
+"""
+Classes representing our knowledge of the world, ie the flight-travel-related
+semantic information for which to look during a conversation.   """
+
 
 class TimeKnowledge(Knowledge):
     def __init__(self, is_destination:bool=None) -> None:

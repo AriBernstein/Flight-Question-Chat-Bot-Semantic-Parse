@@ -5,6 +5,9 @@ from Utils.CustomExceptions import InvalidTypeException
 
 
 class StateKnowledge(Knowledge):
+    """
+    Class inhereting from Knowledge type representing a US State.   """
+    
     def __init__(self, is_destination:bool=None) -> None:
         super().__init__(is_destination=is_destination, priority=1)
         self._state = None
@@ -29,12 +32,18 @@ class StateKnowledge(Knowledge):
         return str(self)
 
 class OriginStateKnowledge(StateKnowledge):
+    """
+    Class inhereting from StateKnowledge type representing either a US State at
+    the origin, or the only USState.    """
     def __init__(self) -> None:
         super().__init__(is_destination=False)
     def __str__(self) -> str:
         return "Origin" + super().__str__()
 
 class DestinationStateKnowledge(StateKnowledge):
+    """
+    Class inhereting from StateKnowledge type representing a either a USState at
+    the destination, or the only USState.   """
     def __init__(self) -> None:
         super().__init__(is_destination=True)
     def __str__(self) -> str:
@@ -42,6 +51,8 @@ class DestinationStateKnowledge(StateKnowledge):
     
     
 class CityKnowledge(Knowledge):
+    """
+    Class inhereting from Knowledge type representing a City.   """
     def __init__(self, is_destination:bool=None) -> None:
         super().__init__(is_destination=is_destination, priority=2)
         self._city = None
@@ -63,12 +74,18 @@ class CityKnowledge(Knowledge):
         return str(self)
         
 class OriginCityKnowledge(CityKnowledge):
+    """
+    Class inhereting from CityKnowledge type representing either a City at the
+    origin, or the only City.   """
     def __init__(self) -> None:
         super().__init__(origin=True)
     def __str__(self) -> str:
         return "Origin" + super().__str__()
 
 class DestinationCityKnowledge(CityKnowledge):
+    """
+    Class inhereting from CityKnowledge type representing a City at the origin.
+    """
     def __init__(self) -> None:
         super().__init__(origin=False)
     def __str__(self) -> str:
@@ -76,7 +93,8 @@ class DestinationCityKnowledge(CityKnowledge):
     
     
 class AirportKnowledge(Knowledge):
-    
+    """
+    Class inhereting from Knowledge type representing an Airport.   """
     def __init__(self, is_destination:bool=None) -> None:
         super().__init__(is_destination=is_destination, priority=1)
         self._airport = None
@@ -99,12 +117,18 @@ class AirportKnowledge(Knowledge):
         return str(self)
     
 class OriginAirportKnowledge(AirportKnowledge):
+    """
+    Class inhereting from AirportKnowledge type representing either an Airport
+    City at the origin, or the only Airport.    s"""
     def __init__(self) -> None:
         super().__init__(is_destination=False)
     def __str__(self) -> str:
         return "Origin" + super().__str__()
 
 class DestinationAirportKnowledge(CityKnowledge):
+    """
+    Class inhereting from AirportKnowledge type representing an Airport at the 
+    origin. """
     def __init__(self) -> None:
         super().__init__(is_destination=True)
     def __str__(self) -> str:
