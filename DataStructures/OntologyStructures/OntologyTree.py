@@ -39,5 +39,7 @@ class OntologyTree:
         return self._ont_dict[ont_label].ancestors() \
             if ont_label in self._ont_dict else set()
     
-    def __sizeof__(self) -> int:
+    def tree_size(self) -> int:
+        """
+        Returns: int: number of nodes in OntologyTree.  """
         return len(self._ont_dict)
